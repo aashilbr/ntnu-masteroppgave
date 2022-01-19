@@ -1,0 +1,13 @@
+{
+    "name": "ntnu-masteroppgave",
+    "dockerComposeFile": [
+        "../docker-compose.devcontainer.yml"
+    ],
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "shutdownAction": "stopCompose",
+    "extensions": [
+        "ms-vscode.cpptools",
+        "ms-python.python"
+    ]
+}
