@@ -1,0 +1,1 @@
+Run the software by running `sudo ./run.sh`.

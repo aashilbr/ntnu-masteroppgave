@@ -1,0 +1,61 @@
+version: '3'
+
+services: 
+  ros_noetic: 
+    container_name: ros_noetic
+    build:
+      context: ./ros_noetic
+      dockerfile: Dockerfile
+    ports:
+      - "11311:11311"
+    environment:
+      - ROS_MASTER_URI=http://ros_noetic:11311
+  
+  gazebo:
+    container_name: gazebo
+    build:
+      context: ./gazebo
+      dockerfile: Dockerfile
+    environment: 
+      - ROS_MASTER_URI=http://ros_noetic:11311
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    ports:
+      - "11345:11345"
+    depends_on:
+      - ros_noetic
+  
+  rviz:
+    container_name: rviz
+    build:
+      context: ./rviz
+      dockerfile: Dockerfile
+    environment:
+      - ROS_MASTER_URI=http://ros_noetic:11311
+      - GAZEBO_MASTER_URI=http://gazebo:11345
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    depends_on:
+      - ros_noetic
+  
+  model_spawner:
+    container_name: model_spawner
+    build:
+      context: ./model_spawner
+      dockerfile: Dockerfile
+    environment:
+      - ROS_MASTER_URI=http://ros_noetic:11311
+      - GAZEBO_MASTER_URI=http://gazebo:11345
+  
+  robot:
+    container_name: robot
+    build:
+      context: ./robot
+      dockerfile: Dockerfile
+    environment:
+      - ROS_MASTER_URI=http://ros_noetic:11311
+      - GAZEBO_MASTER_URI=http://gazebo:11345

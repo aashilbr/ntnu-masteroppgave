@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  robot:
+    command: ["echo", "Robot disabled"]
+  model_spawner:
+    command: ["echo", "Model spawner disabled"]
+  rviz:
+    command: ["echo", "RViz disabled"]
