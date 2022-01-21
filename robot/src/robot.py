@@ -18,7 +18,7 @@ def add_model():
     
     q = quaternion_from_euler(0, 0, 0)
     orientation = Quaternion(q[0], q[1], q[2], q[3])
-    pose = Pose(Point(x=0, y=0, z=0), orientation)
+    pose = Pose(Point(x=-2, y=0, z=0), orientation)
 
     spawn_sdf_model("robot", robot_xml, "", pose, "world")
 
