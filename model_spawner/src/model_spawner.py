@@ -5,6 +5,7 @@ from gazebo_msgs.srv import SpawnModel
 from geometry_msgs.msg import Quaternion, Pose, Point
 from generate_valve import Valve
 from math import pi
+from tf.transformations import quaternion_from_euler
 
 def add_valve():    
     rospy.loginfo('Generating valve ...')
@@ -67,8 +68,9 @@ def add_huldra():
     with open('/home/catkin_ws/src/model_spawner/src/models/huldra-small-area/model.sdf') as file:
         model_xml = file.read()
     
-    orientation = Quaternion(0,0,0,0)
-    pose = Pose(Point(x=109, y=-29, z=-282), orientation)
+    q = quaternion_from_euler(pi/2, 0, 0)
+    orientation = Quaternion(q[0], q[1], q[2], q[3])
+    pose = Pose(Point(x=116, y=287, z=-27), orientation)
 
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     spawn_sdf_model("huldra-small-area", model_xml, "", pose, "world")
