@@ -40,7 +40,7 @@ def add_valve():
 
     rospy.loginfo('Adding generated valve ...')
 
-    with open('/home/catkin_ws/src/model_spawner/src/valve/model.sdf') as file:
+    with open('/home/catkin_ws/src/model_spawner/src/models/valve/model.sdf') as file:
         model_xml = file.read()
     
     orientation = Quaternion(0,0,0,0)
@@ -52,7 +52,7 @@ def add_valve():
 def add_floor():
     rospy.loginfo('Adding floor ...')
 
-    with open('/home/catkin_ws/src/model_spawner/src/floor/model.sdf') as file:
+    with open('/home/catkin_ws/src/model_spawner/src/models/floor/model.sdf') as file:
         model_xml = file.read()
     
     orientation = Quaternion(0,0,0,0)
@@ -64,14 +64,14 @@ def add_floor():
 def add_huldra():
     rospy.loginfo('Adding Huldra ...')
 
-    with open('/home/catkin_ws/src/model_spawner/src/huldra/model.sdf') as file:
+    with open('/home/catkin_ws/src/model_spawner/src/models/huldra-small-area/model.sdf') as file:
         model_xml = file.read()
     
     orientation = Quaternion(0,0,0,0)
     pose = Pose(Point(x=109, y=-29, z=-282), orientation)
 
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
-    spawn_sdf_model("huldra", model_xml, "", pose, "world")
+    spawn_sdf_model("huldra-small-area", model_xml, "", pose, "world")
 
 if __name__ == '__main__':
     try:
