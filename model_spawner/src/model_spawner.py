@@ -61,12 +61,25 @@ def add_floor():
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     spawn_sdf_model("floor", model_xml, "", pose, "world")
 
+def add_huldra():
+    rospy.loginfo('Adding Huldra ...')
+
+    with open('/home/catkin_ws/src/model_spawner/src/huldra/model.sdf') as file:
+        model_xml = file.read()
+    
+    orientation = Quaternion(0,0,0,0)
+    pose = Pose(Point(x=109, y=-29, z=-282), orientation)
+
+    spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
+    spawn_sdf_model("huldra", model_xml, "", pose, "world")
+
 if __name__ == '__main__':
     try:
         rospy.init_node('model_spawner', anonymous=True)
         rospy.loginfo("Waiting for service gazebo/spawn_sdf_model ...")
         rospy.wait_for_service("gazebo/spawn_sdf_model")
-        add_valve()
-        add_floor()
+        #add_valve()
+        #add_floor()
+        add_huldra()
     except rospy.ROSInterruptException:
         pass
