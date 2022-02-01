@@ -1,1 +1,1 @@
-*/Huldra-small-area.obj filter=lfs diff=lfs merge=lfs -text
+gazebo/models/huldra-small-area/meshes/Huldra-small-area.obj filter=lfs diff=lfs merge=lfs -text
