@@ -21,9 +21,6 @@ RUN \
   ros-noetic-gazebo-ros-pkgs \
   ros-noetic-gazebo-ros-control
 
-WORKDIR /root/
-COPY ./huldra-models/ .gazebo/models
-
 WORKDIR /home/
 RUN mkdir -p catkin_ws/src
 COPY ./ catkin_ws/src/gazebo
