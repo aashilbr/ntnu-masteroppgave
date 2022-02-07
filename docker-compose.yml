@@ -22,6 +22,7 @@ services:
       - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./resources/huldra-models:/home/catkin_ws/src/gazebo/huldra-models:rw
     ports:
       - "11345:11345"
     depends_on:
@@ -50,6 +51,8 @@ services:
     environment:
       - ROS_MASTER_URI=http://ros_noetic:11311
       - GAZEBO_MASTER_URI=http://gazebo:11345
+    volumes:
+      - ./resources/huldra-models:/home/catkin_ws/src/model_spawner/src/huldra-models:rw
   
   robot:
     container_name: robot
@@ -68,3 +71,5 @@ services:
     environment:
       - ROS_MASTER_URI=http://ros_noetic:11311
       - GAZEBO_MASTER_URI=http://gazebo:11345
+    volumes:
+      - ./resources/huldra-models:/home/catkin_ws/src/mission_planner/src/huldra-models:rw

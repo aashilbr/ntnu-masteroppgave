@@ -65,7 +65,7 @@ def add_floor():
 def add_huldra_small_area():
     rospy.loginfo('Adding Huldra (small area)...')
 
-    with open('/home/catkin_ws/src/model_spawner/src/models/huldra-small-area/model.sdf') as file:
+    with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-small-area/model.sdf') as file:
         model_xml = file.read()
     
     q = quaternion_from_euler(pi/2, 0, 0)
@@ -78,7 +78,7 @@ def add_huldra_small_area():
 def add_huldra_walkway():
     rospy.loginfo('Adding Huldra (walkway) ...')
 
-    with open('/home/catkin_ws/src/model_spawner/src/models/huldra-walkway/model.sdf') as file:
+    with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-walkway/model.sdf') as file:
         model_xml = file.read()
     
     q = quaternion_from_euler(pi/2, 0, 0)

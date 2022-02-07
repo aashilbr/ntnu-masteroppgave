@@ -1,6 +1,6 @@
 FROM ros:noetic-ros-core
 WORKDIR /root/
-COPY ./models/ .gazebo/models
+COPY ./huldra-models/ .gazebo/models
 WORKDIR /home/
 RUN \
   apt-get update && \
