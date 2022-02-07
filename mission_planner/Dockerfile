@@ -1,7 +1,7 @@
 FROM ros:noetic-ros-core
 ENV PYTHONUNBUFFERED=1
-
 WORKDIR /home/
+
 RUN \
   apt-get update && \
   apt-get install -y \
@@ -11,10 +11,6 @@ RUN \
   python3-rosdep \
   ros-noetic-gazebo-ros-pkgs
 
-RUN mkdir -p catkin_ws/src
-COPY ./ catkin_ws/src/mission_planner
-
-WORKDIR /home/catkin_ws/
 RUN \
   apt-get update && \
   apt-get install -y \
@@ -28,6 +24,10 @@ RUN \
   libtbb-dev \
   python3-dev \
   python3-pip
+
+WORKDIR /home/
+RUN mkdir -p catkin_ws
+WORKDIR /home/catkin_ws/
 RUN git clone https://github.com/PyMesh/PyMesh.git
 WORKDIR /home/catkin_ws/PyMesh
 RUN git submodule update --init
@@ -35,6 +35,10 @@ RUN pip install -r /home/catkin_ws/PyMesh/python/requirements.txt
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN python3 setup.py build
 RUN python3 setup.py install
+
+WORKDIR /home/
+RUN mkdir -p catkin_ws/src
+COPY ./ catkin_ws/src/mission_planner
 
 WORKDIR /home/catkin_ws/
 RUN \

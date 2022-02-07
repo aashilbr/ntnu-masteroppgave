@@ -1,6 +1,7 @@
 FROM ros:noetic-ros-core
 ENV PYTHONUNBUFFERED=1
 WORKDIR /home/
+
 RUN \
   apt-get update && \
   apt-get install -y \
@@ -9,8 +10,11 @@ RUN \
   python3-catkin-tools \
   python3-rosdep \
   ros-noetic-gazebo-ros-pkgs
+
+WORKDIR /home/
 RUN mkdir -p catkin_ws/src
 COPY ./ catkin_ws/src/model_spawner
+
 WORKDIR /home/catkin_ws/
 RUN \
   rosdep init && \
