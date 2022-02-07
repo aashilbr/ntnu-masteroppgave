@@ -5,5 +5,3 @@ services:
     command: ["echo", "Robot disabled"]
   rviz:
     command: ["echo", "RViz disabled"]
-  mission_planner:
-    command: ["echo", "Mission planner disabled"]
