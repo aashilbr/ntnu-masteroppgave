@@ -62,8 +62,8 @@ def add_floor():
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     spawn_sdf_model("floor", model_xml, "", pose, "world")
 
-def add_huldra():
-    rospy.loginfo('Adding Huldra ...')
+def add_huldra_small_area():
+    rospy.loginfo('Adding Huldra (small area)...')
 
     with open('/home/catkin_ws/src/model_spawner/src/models/huldra-small-area/model.sdf') as file:
         model_xml = file.read()
@@ -75,6 +75,19 @@ def add_huldra():
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     spawn_sdf_model("huldra-small-area", model_xml, "", pose, "world")
 
+def add_huldra_walkway():
+    rospy.loginfo('Adding Huldra (walkway) ...')
+
+    with open('/home/catkin_ws/src/model_spawner/src/models/huldra-walkway/model.sdf') as file:
+        model_xml = file.read()
+    
+    q = quaternion_from_euler(pi/2, 0, 0)
+    orientation = Quaternion(q[0], q[1], q[2], q[3])
+    pose = Pose(Point(x=116, y=287, z=-27), orientation)
+
+    spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
+    spawn_sdf_model("huldra-walkway", model_xml, "", pose, "world")
+
 if __name__ == '__main__':
     try:
         rospy.init_node('model_spawner', anonymous=True)
@@ -82,6 +95,7 @@ if __name__ == '__main__':
         rospy.wait_for_service("gazebo/spawn_sdf_model")
         #add_valve()
         #add_floor()
-        add_huldra()
+        #add_huldra_small_area()
+        add_huldra_walkway()
     except rospy.ROSInterruptException:
         pass
