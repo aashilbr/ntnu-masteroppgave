@@ -63,7 +63,7 @@ def add_floor():
     spawn_sdf_model("floor", model_xml, "", pose, "world")
 
 def add_huldra_small_area():
-    rospy.loginfo('Adding Huldra (small area)...')
+    rospy.loginfo('Adding Huldra-small-area...')
 
     with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-small-area/model.sdf') as file:
         model_xml = file.read()
@@ -76,9 +76,9 @@ def add_huldra_small_area():
     spawn_sdf_model("huldra-small-area", model_xml, "", pose, "world")
 
 def add_huldra_walkway():
-    rospy.loginfo('Adding Huldra (walkway) ...')
+    rospy.loginfo('Adding Huldra-small-area-walkway...')
 
-    with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-walkway/model.sdf') as file:
+    with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-small-area-walkway/model.sdf') as file:
         model_xml = file.read()
     
     q = quaternion_from_euler(pi/2, 0, 0)
@@ -86,7 +86,7 @@ def add_huldra_walkway():
     pose = Pose(Point(x=116, y=287, z=-27), orientation)
 
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
-    spawn_sdf_model("huldra-walkway", model_xml, "", pose, "world")
+    spawn_sdf_model("huldra-small-area-walkway", model_xml, "", pose, "world")
 
 if __name__ == '__main__':
     try:
