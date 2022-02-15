@@ -8,7 +8,8 @@ from math import pi
 from tf.transformations import quaternion_from_euler
 
 class ModelSpawner():
-    huldra_offset = Point(x=116, y=287, z=-27)
+    huldra_offset_position = Point(x=116, y=287, z=-27)
+    huldra_offset_roll = pi/2
 
     def __init__(self):
         pass
@@ -74,9 +75,9 @@ class ModelSpawner():
         with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-small-area/model.sdf') as file:
             model_xml = file.read()
         
-        q = quaternion_from_euler(pi/2, 0, 0)
+        q = quaternion_from_euler(self.huldra_offset_roll, 0, 0)
         orientation = Quaternion(q[0], q[1], q[2], q[3])
-        pose = Pose(self.huldra_offset, orientation)
+        pose = Pose(self.huldra_offset_position, orientation)
 
         spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
         spawn_sdf_model("huldra-small-area", model_xml, "", pose, "world")
@@ -87,9 +88,9 @@ class ModelSpawner():
         with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-small-area-walkway/model.sdf') as file:
             model_xml = file.read()
         
-        q = quaternion_from_euler(pi/2, 0, 0)
+        q = quaternion_from_euler(self.huldra_offset_roll, 0, 0)
         orientation = Quaternion(q[0], q[1], q[2], q[3])
-        pose = Pose(self.huldra_offset, orientation)
+        pose = Pose(self.huldra_offset_position, orientation)
 
         spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
         spawn_sdf_model("huldra-small-area-walkway", model_xml, "", pose, "world")
@@ -100,9 +101,9 @@ class ModelSpawner():
         with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-smaller/model.sdf') as file:
             model_xml = file.read()
         
-        q = quaternion_from_euler(pi/2, 0, 0)
+        q = quaternion_from_euler(self.huldra_offset_roll, 0, 0)
         orientation = Quaternion(q[0], q[1], q[2], q[3])
-        pose = Pose(self.huldra_offset, orientation)
+        pose = Pose(self.huldra_offset_position, orientation)
 
         spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
         spawn_sdf_model("huldra-smaller", model_xml, "", pose, "world")
@@ -113,9 +114,9 @@ class ModelSpawner():
         with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-smaller-walkway/model.sdf') as file:
             model_xml = file.read()
         
-        q = quaternion_from_euler(pi/2, 0, 0)
+        q = quaternion_from_euler(self.huldra_offset_roll, 0, 0)
         orientation = Quaternion(q[0], q[1], q[2], q[3])
-        pose = Pose(self.huldra_offset, orientation)
+        pose = Pose(self.huldra_offset_position, orientation)
 
         spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
         spawn_sdf_model("huldra-smaller-walkway", model_xml, "", pose, "world")
