@@ -75,7 +75,7 @@ def add_huldra_small_area():
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     spawn_sdf_model("huldra-small-area", model_xml, "", pose, "world")
 
-def add_huldra_walkway():
+def add_huldra_small_area_walkway():
     rospy.loginfo('Adding Huldra-small-area-walkway...')
 
     with open('/home/catkin_ws/src/model_spawner/src/huldra-models/huldra-small-area-walkway/model.sdf') as file:
