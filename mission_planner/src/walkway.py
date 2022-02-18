@@ -1,13 +1,19 @@
 import pymesh
-from obj_to_gazebo_coordinates import *
+from utils import *
 
 class WalkwayProcessor():
-    def __init__(self):
-        pass
+    def __init__(
+        self, 
+        huldra_models_path = '../../resources/huldra-models/',
+        huldra_walkway_path = 'huldra-smaller-walkway/meshes/',
+        huldra_walkway_filename = 'huldra-smaller-walkway.obj',
+        ):
+        self.huldra_models_path = huldra_models_path
+        self.huldra_walkway_path = huldra_walkway_path
+        self.huldra_walkway_filename = huldra_walkway_filename
 
-    def find_walkway_positions(self):
-        huldra_models_path = '../../resources/huldra-models/'
-        walkway_mesh = pymesh.load_mesh(huldra_models_path + 'huldra-smaller-walkway/meshes/huldra-smaller-walkway.obj')
+    def find_walkway_line(self):
+        walkway_mesh = pymesh.load_mesh(self.huldra_models_path + self.huldra_walkway_path + self.huldra_walkway_filename)
 
         walkway_mesh.add_attribute('face_normal')
         face_normals = walkway_mesh.get_face_attribute('face_normal')
@@ -36,8 +42,10 @@ class WalkwayProcessor():
 
 if __name__ == '__main__':
     wp = WalkwayProcessor()
-    positions = wp.find_walkway_positions()
-    print(positions)
+    walkway_line = wp.find_walkway_line()
+    print('Walkway line:')
+    print(walkway_line)
+    publish_markers(walkway_line)
 
 # Find points on walkway
 
