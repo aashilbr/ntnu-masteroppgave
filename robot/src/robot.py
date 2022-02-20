@@ -11,7 +11,7 @@ def add_model():
     rospy.loginfo("Waiting for service gazebo/spawn_sdf_model ...")
     rospy.wait_for_service("gazebo/spawn_sdf_model")
 
-    rospy.loginfo('Adding robot model ...')
+    rospy.loginfo('Adding robot model (this can take some time - camera model will be downloaded)...')
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     with open('/home/catkin_ws/src/robot/src/robot/robot.sdf') as file:
         robot_xml = file.read()
