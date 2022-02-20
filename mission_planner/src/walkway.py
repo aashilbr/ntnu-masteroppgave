@@ -12,7 +12,9 @@ class WalkwayProcessor():
         self.huldra_walkway_path = huldra_walkway_path
         self.huldra_walkway_filename = huldra_walkway_filename
 
-    def find_walkway_line(self):
+        self.walkway_line = self._find_walkway_line()
+
+    def _find_walkway_line(self):
         walkway_mesh = pymesh.load_mesh(self.huldra_models_path + self.huldra_walkway_path + self.huldra_walkway_filename)
 
         walkway_mesh.add_attribute('face_normal')
@@ -37,24 +39,29 @@ class WalkwayProcessor():
         face_centroids_upwards = [0] * len(faces_upwards_indices)
         for i, index in enumerate(faces_upwards_indices):
             face_centroids_upwards[i] = face_centroids_converted[index]
+
+        # TODO: Find end points on walkway and add them to the returned list
         
         return face_centroids_upwards
+    
+    def get_walkway_line(self):
+        return self.walkway_line
+    
+    def get_points_along_walkway_with_resolution(self, resolution):
+        if resolution == 0:
+            return self.walkway_line
+        else:
+            # TODO: Return points with the given resolution
+            return self.walkway_line
+
 
 if __name__ == '__main__':
     wp = WalkwayProcessor()
-    walkway_line = wp.find_walkway_line()
+    walkway_line = wp.get_walkway_line()
+
     print('Walkway line:')
     print(walkway_line)
+    print()
+
+    print('Publishing walkway line markers...')
     publish_markers(walkway_line)
-
-# Find points on walkway
-
-# Check distance
-
-# Check raycast collisions
-
-# (Check if we can see the front of the valve)
-
-# -> send to image analysis
-
-# Sort points on best weighted result
