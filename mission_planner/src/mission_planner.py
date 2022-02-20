@@ -4,6 +4,7 @@ from utils import *
 from walkway import WalkwayProcessor
 from POI import POI
 from time import sleep
+from math import sqrt
 
 class MissionPlanner:
     def __init__(self, points_of_interest = []):
@@ -34,30 +35,27 @@ class MissionPlanner:
             will_robot_crash = self.will_robot_crash_at_position(possible_inspection_point)
             distance_to_poi = self.get_distance_between_points(possible_inspection_point, poi.position)
             are_there_obstacles = self.are_there_obstacles_between(possible_inspection_point, poi.position)
-            is_inspection_possible = self.is_inspection_possible_from_point(poi, point)
+            is_inspection_possible = self.is_inspection_possible_from_point(poi, possible_inspection_point)
 
             # TODO: Use image processing to find if the inspection is useful
 
             # TODO: Make a better score function
             score = distance_to_poi
-
             possible_inspection_points_scores[i] = score
 
-        # TODO: Sort the possible poses by a weighted sum of the checks mentioned above
-        # TODO: Return the best pose
-
-        inspection_pose = pose_from_position_and_orientation(0, 0, 0, 0, 0, 0) # Dummy pose
+        possible_inspection_points_sorted = [x for _, x in sorted(zip(possible_inspection_points_scores, possible_inspection_points), key=lambda pair: pair[0])]
+        inspection_pose = possible_inspection_points_sorted[0]
         return inspection_pose
     
     def will_robot_crash_at_position(self, position):
         # TODO: Check if robot crashes at the given point
         return False # Dummy return value
     
-    def get_distance_between_points(p1, p2):
-        # TODO: Return real distance between p1, p2
-        return 0 # Dummy distance
+    def get_distance_between_points(self, p1, p2):
+        distance = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 + (p2[2] - p1[2])**2 )
+        return distance
     
-    def are_there_obstacles_between(p1, p2):
+    def are_there_obstacles_between(self, p1, p2):
         # TODO: Find obstacles with raycasting
         return False # Dummy return value
     
