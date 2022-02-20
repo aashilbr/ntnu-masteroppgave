@@ -5,7 +5,6 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Pose, Point
 from tf.transformations import quaternion_from_euler
 from time import sleep
-from gazebo_msgs.msg import ModelStates
 
 def pose_from_position_and_orientation(
     x, 
@@ -47,9 +46,13 @@ def obj_to_gazebo_coordinates_only_roll(coordinates):
 previous_marker_id = 0
 def make_marker(
     point, 
-    r = 0.1, g = 0.1, b = 0.5, a = 1.0,
+    r = 0.1, 
+    g = 0.1, 
+    b = 0.5, 
+    a = 1.0,
     type = 2
     ):
+
     global previous_marker_id
     this_marker_id = previous_marker_id + 1
     previous_marker_id = this_marker_id
@@ -76,13 +79,29 @@ def make_marker(
     
     return marker
 
-def publish_marker(point):
-    publish_markers([point])
+def publish_marker(
+    point,
+    r = 0.1, 
+    g = 0.1, 
+    b = 0.5, 
+    a = 1.0,
+    type = 2
+    ):
 
-def publish_markers(points):
+    publish_markers([point], r, g, b, type)
+
+def publish_markers(
+    points,
+    r = 0.1, 
+    g = 0.1, 
+    b = 0.5, 
+    a = 1.0,
+    type = 2
+    ):
+    
     markers = []
     for i in range(0, len(points)):
-        marker = make_marker(points[i])
+        marker = make_marker(points[i], r, g, b, a, type)
         markers.append(marker)
     
     pub = rospy.Publisher('markers', MarkerArray, queue_size=10)        
