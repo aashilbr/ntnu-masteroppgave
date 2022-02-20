@@ -17,7 +17,7 @@ class ModelSpawner():
     def add_valve(self):
         rospy.loginfo('Generating valve ...')
 
-        model_path = "/home/catkin_ws/src/model_spawner/src/valve"
+        model_path = "/home/catkin_ws/src/model_spawner/src/models/valve"
         x_offset = 0
         y_offset = 0
         z_offset = 1
@@ -51,8 +51,9 @@ class ModelSpawner():
         with open('/home/catkin_ws/src/model_spawner/src/models/valve/model.sdf') as file:
             model_xml = file.read()
         
-        orientation = Quaternion(0,0,0,0)
-        pose = Pose(Point(x=0, y=0, z=0.5), orientation)
+        q = quaternion_from_euler(0, 0, -pi/2)
+        orientation = Quaternion(q[0],q[1],q[2],q[3])
+        pose = Pose(Point(x=0, y=-20, z=2.5), orientation)
 
         spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
         spawn_sdf_model("valve", model_xml, "", pose, "world")
@@ -127,7 +128,7 @@ if __name__ == '__main__':
         rospy.loginfo("Waiting for service gazebo/spawn_sdf_model ...")
         rospy.wait_for_service("gazebo/spawn_sdf_model")
         spawner = ModelSpawner()
-        #spawner.add_valve()
+        spawner.add_valve()
         #spawner.add_floor()
         #spawner.add_huldra_small_area()
         #spawner.add_huldra_small_area_walkway()
