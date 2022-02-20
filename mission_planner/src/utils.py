@@ -7,7 +7,18 @@ from tf.transformations import quaternion_from_euler
 from time import sleep
 from gazebo_msgs.msg import ModelStates
 
-previous_marker_id = 0
+def pose_from_position_and_orientation(
+    x, 
+    y, 
+    z, 
+    a = 0, 
+    b = 0, 
+    c = 0):
+    
+    q = quaternion_from_euler(a, b, c)
+    orientation = Quaternion(q[0], q[1], q[2], q[3])
+    pose = Pose(Point(x=x, y=y, z=z), orientation)
+    return pose
 
 def obj_to_gazebo_coordinates(coordinates):
     a = coordinates[0]
@@ -33,6 +44,7 @@ def obj_to_gazebo_coordinates_only_roll(coordinates):
     z = b
     return [x, y, z]
 
+previous_marker_id = 0
 def make_marker(
     point, 
     r = 0.1, g = 0.1, b = 0.5, a = 1.0,
@@ -42,9 +54,7 @@ def make_marker(
     this_marker_id = previous_marker_id + 1
     previous_marker_id = this_marker_id
 
-    q = quaternion_from_euler(0, 0, 0)
-    orientation = Quaternion(q[0], q[1], q[2], q[3])
-    pose = Pose(Point(point[0], point[1], point[2]), orientation)
+    pose = pose_from_position_and_orientation(point[0], point[1], point[2])
 
     marker = Marker()
     marker.header = Header()

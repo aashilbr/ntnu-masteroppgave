@@ -6,12 +6,6 @@ from tf.transformations import quaternion_from_euler
 from walkway import *
 from time import sleep
 
-def pose_from_position_and_orientation(x, y, z, a, b, c):
-    q = quaternion_from_euler(a, b, c)
-    orientation = Quaternion(q[0], q[1], q[2], q[3])
-    pose = Pose(Point(x=x, y=y, z=z), orientation)
-    return pose
-
 class MissionPlanner:
     def __init__(self, points_of_interest = []):
         self.points_of_interest = points_of_interest
