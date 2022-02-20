@@ -71,9 +71,9 @@ def make_marker(
     marker.color.g = g
     marker.color.b = b
     marker.color.a = a
-    marker.scale.x = 1
-    marker.scale.y = 1
-    marker.scale.z = 1
+    marker.scale.x = 0.15
+    marker.scale.y = 0.15
+    marker.scale.z = 0.15
     marker.frame_locked = False
     marker.ns = "markers"
     
