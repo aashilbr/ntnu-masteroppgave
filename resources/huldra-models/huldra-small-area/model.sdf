@@ -7,7 +7,7 @@
                 <pose>0 0 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://huldra-small-area/meshes/Huldra-small-area.obj</uri>
+                        <uri>model://huldra-models/huldra-small-area/meshes/Huldra-small-area.obj</uri>
                     </mesh>
                 </geometry>
             </visual>

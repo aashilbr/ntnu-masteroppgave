@@ -22,7 +22,7 @@ services:
       - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ./resources/huldra-models:/root/.gazebo/models:rw
+      - ./resources/huldra-models:/root/.gazebo/models/huldra-models:rw
     ports:
       - "11345:11345"
     depends_on:

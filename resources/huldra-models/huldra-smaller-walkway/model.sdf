@@ -7,7 +7,7 @@
                 <pose>0 0 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://huldra-smaller-walkway/meshes/huldra-smaller-walkway.obj</uri>
+                        <uri>model://huldra-models/huldra-smaller-walkway/meshes/huldra-smaller-walkway.obj</uri>
                     </mesh>
                 </geometry>
             </visual>
