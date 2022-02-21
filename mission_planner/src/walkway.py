@@ -1,3 +1,4 @@
+from ast import walk
 import pymesh
 from utils import *
 
@@ -51,17 +52,11 @@ class WalkwayProcessor():
         if resolution == 0:
             return self.walkway_line
         else:
-            # TODO: Return points with the given resolution
-            return self.walkway_line
+            points = []
+            points.append(self.walkway_line[0])
+            points.append(self.walkway_line[-1])
 
-
-if __name__ == '__main__':
-    wp = WalkwayProcessor()
-    walkway_line = wp.get_walkway_line()
-
-    print('Walkway line:')
-    print(walkway_line)
-    print()
-
-    print('Publishing walkway line markers...')
-    publish_markers(walkway_line)
+            #for i in len(0, len(walkway_line) - 1):
+            #    distance_to_next_point = get_distance_between_points(walkway_line[i], walkway_line[i + 1])
+        
+        return points
