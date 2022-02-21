@@ -10,10 +10,15 @@ class MissionPlanner:
     def __init__(self, points_of_interest = []):
         self.points_of_interest = points_of_interest
 
-        self.wp = WalkwayProcessor(huldra_models_path = '/home/catkin_ws/src/mission_planner/src/huldra-models/')
+        self.wp = WalkwayProcessor(
+            huldra_models_path = '/home/catkin_ws/src/mission_planner/src/huldra-models/',
+            huldra_walkway_path = 'huldra-smaller-walkway/meshes/',
+            huldra_walkway_filename = 'huldra-smaller-walkway.obj'
+        )
 
         self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
+        publish_line_marker(self.walkway_line)
 
     def find_inspection_poses(self):
         inspection_poses = [None] * len(self.points_of_interest)
@@ -39,7 +44,6 @@ class MissionPlanner:
             are_there_obstacles = self.are_there_obstacles_between(possible_inspection_point, poi.position)
             is_poi_face_against_inspection_point = self.is_poi_face_against_inspection_point(poi, possible_inspection_point)
             score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.position)
-            # TODO: Use image processing to find if the inspection is useful
 
             score = distance_to_poi # TODO: Find a better score function
             possible_inspection_points_scores[i] = score

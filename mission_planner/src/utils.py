@@ -88,7 +88,7 @@ def publish_marker(
     type = 2
     ):
 
-    publish_markers([point], r, g, b, type)
+    publish_markers([point], r, g, b, a, type)
 
 def publish_markers(
     points,
@@ -103,6 +103,86 @@ def publish_markers(
     for i in range(0, len(points)):
         marker = make_marker(points[i], r, g, b, a, type)
         markers.append(marker)
+    
+    pub = rospy.Publisher('markers', MarkerArray, queue_size=10)        
+    marker_array_msg = MarkerArray()
+    marker_array_msg.markers = markers
+
+    print('Waiting for /markers topic...')
+    _, subs = rostopic.get_topic_list()
+    markersTopicAvailable = False
+    while not markersTopicAvailable:
+        for topic, _, _ in subs:
+            if topic == '/markers':
+                markersTopicAvailable = True
+                break
+    
+    sleep(3)
+    pub.publish(marker_array_msg)
+
+def make_line_marker(
+    points, 
+    r = 0.5, 
+    g = 0.1, 
+    b = 0.1, 
+    a = 1.0,
+    type = 4
+    ):
+
+    global previous_marker_id
+    this_marker_id = previous_marker_id + 1
+    previous_marker_id = this_marker_id
+
+    marker_points = []
+    for point in points:
+        marker_points.append(Point(point[0], point[1], point[2]))
+
+    marker = Marker()
+    marker.header = Header()
+    marker.header.frame_id = "map"
+    marker.header.stamp = rospy.get_rostime()
+    marker.id = this_marker_id
+    marker.points = marker_points
+    marker.type = type # 0: Arrow 1: Cube, 2: Sphere, 3: Cylinder
+    marker.action = 0 # 0: Add
+    marker.color.r = r
+    marker.color.g = g
+    marker.color.b = b
+    marker.color.a = a
+    marker.scale.x = 0.15
+    marker.scale.y = 0.15
+    marker.scale.z = 0.15
+    marker.frame_locked = False
+    marker.ns = "markers"
+    
+    return marker
+
+def publish_line_marker(
+    points,
+    r = 0.5, 
+    g = 0.1, 
+    b = 0.1, 
+    a = 1.0,
+    type = 4
+    ):
+
+    publish_line_markers([points], r, g, b, a, type)
+
+def publish_line_markers(
+    pointss,
+    r = 0.5, 
+    g = 0.1, 
+    b = 0.1, 
+    a = 1.0,
+    type = 4
+    ):
+    
+    markers = []
+    for i in range(0, len(pointss)):
+        marker = make_line_marker(pointss[i], r, g, b, a, type)
+        markers.append(marker)
+    
+    print(markers)
     
     pub = rospy.Publisher('markers', MarkerArray, queue_size=10)        
     marker_array_msg = MarkerArray()
