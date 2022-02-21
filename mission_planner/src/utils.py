@@ -5,6 +5,7 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Pose, Point
 from tf.transformations import quaternion_from_euler
 from time import sleep
+from math import sqrt
 
 def pose_from_position_and_orientation(
     x, 
@@ -182,8 +183,6 @@ def publish_line_markers(
         marker = make_line_marker(pointss[i], r, g, b, a, type)
         markers.append(marker)
     
-    print(markers)
-    
     pub = rospy.Publisher('markers', MarkerArray, queue_size=10)        
     marker_array_msg = MarkerArray()
     marker_array_msg.markers = markers
@@ -199,3 +198,7 @@ def publish_line_markers(
     
     sleep(3)
     pub.publish(marker_array_msg)
+    
+def get_distance_between_points(p1, p2):
+    distance = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 + (p2[2] - p1[2])**2 )
+    return distance

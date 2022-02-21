@@ -4,7 +4,6 @@ from utils import *
 from walkway import WalkwayProcessor
 from POI import POI
 from time import sleep
-from math import sqrt
 import constants
 
 class MissionPlanner:
@@ -17,8 +16,8 @@ class MissionPlanner:
             huldra_walkway_filename = 'huldra-smaller-walkway.obj'
         )
 
-        #self.walkway_line = self.wp.get_walkway_line()
-        self.walkway_line = constants.smaller_area_walkway_line
+        self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
+        self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
 
@@ -34,14 +33,20 @@ class MissionPlanner:
 
         # TODO: Redo all of this with higher resolution, if we find any interesting parts of the walkway
 
-        possible_inspection_points = self.wp.get_points_along_walkway_with_resolution(0)
+        possible_inspection_points = self.wp.get_points_along_walkway_with_resolution(10)
+        publish_markers(possible_inspection_points, r=0.1, g=0.5, b=0.1)
+        
+        print('Possible inspection points (resolution 10):')
+        for point in possible_inspection_points:
+            print(point)
+        print()
 
         possible_inspection_points_scores = [0] * len(possible_inspection_points)
         for i in range(0, len(possible_inspection_points)):
             possible_inspection_point = possible_inspection_points[i]
             score = 0
 
-            distance_to_poi = self.get_distance_between_points(possible_inspection_point, poi.position)
+            distance_to_poi = get_distance_between_points(possible_inspection_point, poi.position)
             will_inspector_crash = self.will_inspector_crash_at_position(possible_inspection_point)
             are_there_obstacles = self.are_there_obstacles_between(possible_inspection_point, poi.position)
             is_poi_face_against_inspection_point = self.is_poi_face_against_inspection_point(poi, possible_inspection_point)
@@ -53,10 +58,6 @@ class MissionPlanner:
         possible_inspection_points_sorted = [x for _, x in sorted(zip(possible_inspection_points_scores, possible_inspection_points), key=lambda pair: pair[0])]
         inspection_pose = possible_inspection_points_sorted[0]
         return inspection_pose
-    
-    def get_distance_between_points(self, p1, p2):
-        distance = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 + (p2[2] - p1[2])**2 )
-        return distance
     
     def will_inspector_crash_at_position(self, position):
         # TODO: Check if robot crashes at the given point. E.g. are there anything placed on the walkway?
@@ -83,8 +84,10 @@ if __name__ == '__main__':
         ]
         mission_planner = MissionPlanner(points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()
+
         print('Inspection poses')
         print(inspection_poses)
+        print()
 
         # TODO: Send the proposed inspection poses to an Inspector node
 
