@@ -5,6 +5,7 @@ from walkway import WalkwayProcessor
 from POI import POI
 from time import sleep
 from math import sqrt
+import constants
 
 class MissionPlanner:
     def __init__(self, points_of_interest = []):
@@ -16,7 +17,8 @@ class MissionPlanner:
             huldra_walkway_filename = 'huldra-smaller-walkway.obj'
         )
 
-        self.walkway_line = self.wp.get_walkway_line()
+        #self.walkway_line = self.wp.get_walkway_line()
+        self.walkway_line = constants.smaller_area_walkway_line
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
 
