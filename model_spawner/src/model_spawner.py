@@ -10,39 +10,27 @@ from tf.transformations import quaternion_from_euler
 class ModelSpawner():
     huldra_offset_position = Point(x=116, y=287, z=-27)
     huldra_offset_roll = pi/2
+    valve_index = 1
 
     def __init__(self):
         pass
     
-    def add_valve(self):
+    def add_valve(self, x, y, z, yaw):
         rospy.loginfo('Generating valve ...')
 
-        model_path = "/home/catkin_ws/src/model_spawner/src/models/valve"
-        x_offset = 0
-        y_offset = 0
-        z_offset = 1
-        roll_offset = 0
-        pitch_offset = 0
-        yaw_offset = 0
-        pipe_radius = 0.2
-        pipe_length = 1
-        valve_pipe_radius = 0.2
-        valve_pipe_length = 0.5
-        valve_radius = 0.2
-
         valve = Valve(
-            model_path = model_path,
-            x_offset = x_offset,
-            y_offset = y_offset,
-            z_offset = z_offset,
-            roll_offset = roll_offset,
-            pitch_offset = pitch_offset,
-            yaw_offset = yaw_offset,
-            pipe_radius = pipe_radius,
-            pipe_length = pipe_length,
-            valve_pipe_radius = valve_pipe_radius,
-            valve_pipe_length = valve_pipe_length,
-            valve_radius = valve_radius
+            model_path = "/home/catkin_ws/src/model_spawner/src/models/valve",
+            x_offset = 0,
+            y_offset = 0,
+            z_offset = 1,
+            roll_offset = 0,
+            pitch_offset = 0,
+            yaw_offset = 0,
+            pipe_radius = 0.2,
+            pipe_length = 1,
+            valve_pipe_radius = 0.2,
+            valve_pipe_length = 0.5,
+            valve_radius = 0.2
         )
         valve.generate_sdf()
 
@@ -51,24 +39,13 @@ class ModelSpawner():
         with open('/home/catkin_ws/src/model_spawner/src/models/valve/model.sdf') as file:
             model_xml = file.read()
         
-        q = quaternion_from_euler(0, 0, -pi/2)
+        q = quaternion_from_euler(0, 0, yaw)
         orientation = Quaternion(q[0],q[1],q[2],q[3])
-        pose = Pose(Point(x=0, y=-20, z=2.5), orientation)
+        pose = Pose(Point(x=x, y=y, z=z), orientation)
 
         spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
-        spawn_sdf_model("valve", model_xml, "", pose, "world")
-
-    def add_floor(self):
-        rospy.loginfo('Adding floor ...')
-
-        with open('/home/catkin_ws/src/model_spawner/src/models/floor/model.sdf') as file:
-            model_xml = file.read()
-        
-        orientation = Quaternion(0,0,0,0)
-        pose = Pose(Point(x=0, y=-2, z=0.5), orientation)
-
-        spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
-        spawn_sdf_model("floor", model_xml, "", pose, "world")
+        spawn_sdf_model("valve" + str(self.valve_index), model_xml, "", pose, "world")
+        self.valve_index += 1
 
     def add_huldra_small_area(self):
         rospy.loginfo('Adding Huldra-small-area...')
@@ -128,7 +105,8 @@ if __name__ == '__main__':
         rospy.loginfo("Waiting for service gazebo/spawn_sdf_model ...")
         rospy.wait_for_service("gazebo/spawn_sdf_model")
         spawner = ModelSpawner()
-        spawner.add_valve()
+        spawner.add_valve(x=0, y=-20, z=2.5, yaw=-pi/2)
+        spawner.add_valve(x=5, y=-23, z=2.5, yaw=-pi/2)
         #spawner.add_floor()
         #spawner.add_huldra_small_area()
         #spawner.add_huldra_small_area_walkway()
