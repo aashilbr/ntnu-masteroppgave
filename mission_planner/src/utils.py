@@ -2,7 +2,7 @@ import rospy
 import rostopic
 from visualization_msgs.msg import Marker, MarkerArray
 from std_msgs.msg import Header
-from geometry_msgs.msg import Quaternion, Pose, Point
+from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler
 from time import sleep
 from math import sqrt
@@ -202,3 +202,12 @@ def publish_line_markers(
 def get_distance_between_points(p1, p2):
     distance = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 + (p2[2] - p1[2])**2 )
     return distance
+
+def send_to_inspector(poi_poses: PoseArray, inspection_poses: PoseArray):
+    print('Publishing poses to inspector node...')
+    
+    inspector_poi_pub = rospy.Publisher('inspector/poi_poses', PoseArray, queue_size=10)
+    inspection_inspection_pub = rospy.Publisher('inspector/inspection_poses', PoseArray, queue_size=10)
+
+    inspector_poi_pub.publish(poi_poses)
+    inspection_inspection_pub.publish(inspection_poses)
