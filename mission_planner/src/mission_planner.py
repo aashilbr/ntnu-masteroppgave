@@ -61,7 +61,7 @@ class MissionPlanner:
         inspection_orientation = get_orientation_towards_point(inspection_point, poi.point)
         inspection_pose = Pose(inspection_point, inspection_orientation)
 
-        publish_marker(inspection_point, r=1.0, g=1.0, b=0.0)
+        publish_marker(inspection_point, r=1.0, g=1.0, b=0.0, scale=0.2)
 
         return inspection_pose
     
@@ -86,8 +86,10 @@ if __name__ == '__main__':
     try:
         # TODO: Use Huldra model with multiple points of interest
         points_of_interest = [
-            POI('valve', Point(0, -20, 2.5), Quaternion(0, 0, 0, 1))
+            POI('valve1', Point(0, -20, 2.5), Quaternion(0, 0, 0, 1)),
+            POI('valve2', Point(5, -23, 2.5), Quaternion(0, 0, 0, 1))
         ]
+
         mission_planner = MissionPlanner(points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()
 
