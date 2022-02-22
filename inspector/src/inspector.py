@@ -76,19 +76,30 @@ class Inspector():
 
     def inspect(self):
         print('Inspecting...')
-        print(self._inspection_poses)
-        print()
 
-        print('Publishing new Inspector Robot state')
+        for i in range(0, len(self._inspection_poses)):
+            self._inspect_one_poi(i)
+    
+    def _inspect_one_poi(self, index):
+        print('Inspecting POI with index', index, '...')
+        inspection_pose = self._inspection_poses[index]
+        new_robot_state = ModelState(
+            self._robot_state.model_name,
+            inspection_pose,
+            self._robot_state.twist,
+            'map'
+        )
         pub = rospy.Publisher('gazebo/set_model_state', ModelState, queue_size=10)
-        new_robot_state = self._robot_state
-        new_robot_state.pose = self._inspection_poses[0]
+        print('Moving Inspector Robot to new pose:')
         print(new_robot_state)
 
         i = 0
         while i <= 3:
             pub.publish(new_robot_state)
             sleep(1)
+            i += 1
+
+        # TODO: Save inspection image
 
 if __name__ == '__main__':
     rospy.init_node('inspector', anonymous=True)

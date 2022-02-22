@@ -36,11 +36,7 @@ class MissionPlanner:
         resolution = 1
         possible_inspection_points = self.wp.get_points_along_walkway_with_resolution(resolution)
         publish_markers(possible_inspection_points, r=0.1, g=0.5, b=0.1)
-        
-        print('Possible inspection points (resolution', resolution, '):')
-        for point in possible_inspection_points:
-            print(point)
-        print()
+        print('Finding possible inspection points with resolution', resolution)
 
         possible_inspection_points_scores = [0] * len(possible_inspection_points)
         for i in range(0, len(possible_inspection_points)):
@@ -92,10 +88,6 @@ if __name__ == '__main__':
 
         mission_planner = MissionPlanner(points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()
-
-        print('Inspection poses')
-        print(inspection_poses)
-        print()
 
         i = 0
         while i <= 3:
