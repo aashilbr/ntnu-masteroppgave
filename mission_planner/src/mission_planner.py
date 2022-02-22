@@ -61,6 +61,8 @@ class MissionPlanner:
         inspection_orientation = get_orientation_towards_point(inspection_point, poi.point)
         inspection_pose = Pose(inspection_point, inspection_orientation)
 
+        publish_marker(inspection_point, r=1.0, g=1.0, b=0.0)
+
         return inspection_pose
     
     def will_inspector_crash_at_point(self, point):
