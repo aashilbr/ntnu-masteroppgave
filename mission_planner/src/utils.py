@@ -52,7 +52,8 @@ def make_marker(
     g = 0.1, 
     b = 0.5, 
     a = 1.0,
-    type = 2
+    type = 2,
+    scale = 0.15
     ):
 
     global previous_marker_id
@@ -73,9 +74,9 @@ def make_marker(
     marker.color.g = g
     marker.color.b = b
     marker.color.a = a
-    marker.scale.x = 0.15
-    marker.scale.y = 0.15
-    marker.scale.z = 0.15
+    marker.scale.x = scale
+    marker.scale.y = scale
+    marker.scale.z = scale
     marker.frame_locked = False
     marker.ns = "markers"
     
@@ -87,10 +88,11 @@ def publish_marker(
     g = 0.1, 
     b = 0.5, 
     a = 1.0,
-    type = 2
+    type = 2,
+    scale = 0.15
     ):
 
-    publish_markers([point], r, g, b, a, type)
+    publish_markers([point], r, g, b, a, type, scale)
 
 def publish_markers(
     points,
@@ -98,12 +100,13 @@ def publish_markers(
     g = 0.1, 
     b = 0.5, 
     a = 1.0,
-    type = 2
+    type = 2,
+    scale = 0.15
     ):
     
     markers = []
     for i in range(0, len(points)):
-        marker = make_marker(points[i], r, g, b, a, type)
+        marker = make_marker(points[i], r, g, b, a, type, scale)
         markers.append(marker)
     
     pub = rospy.Publisher('markers', MarkerArray, queue_size=10)        
@@ -128,7 +131,8 @@ def make_line_marker(
     g = 0.1, 
     b = 0.1, 
     a = 1.0,
-    type = 4
+    type = 4,
+    scale = 0.15
     ):
 
     global previous_marker_id
@@ -151,9 +155,9 @@ def make_line_marker(
     marker.color.g = g
     marker.color.b = b
     marker.color.a = a
-    marker.scale.x = 0.15
-    marker.scale.y = 0.15
-    marker.scale.z = 0.15
+    marker.scale.x = scale
+    marker.scale.y = scale
+    marker.scale.z = scale
     marker.frame_locked = False
     marker.ns = "markers"
     
@@ -165,10 +169,11 @@ def publish_line_marker(
     g = 0.1, 
     b = 0.1, 
     a = 1.0,
-    type = 4
+    type = 4,
+    scale = 0.15
     ):
 
-    publish_line_markers([points], r, g, b, a, type)
+    publish_line_markers([points], r, g, b, a, type, scale)
 
 def publish_line_markers(
     pointss,
@@ -176,12 +181,13 @@ def publish_line_markers(
     g = 0.1, 
     b = 0.1, 
     a = 1.0,
-    type = 4
+    type = 4,
+    scale = 0.15
     ):
     
     markers = []
     for i in range(0, len(pointss)):
-        marker = make_line_marker(pointss[i], r, g, b, a, type)
+        marker = make_line_marker(pointss[i], r, g, b, a, type, scale)
         markers.append(marker)
     
     pub = rospy.Publisher('markers', MarkerArray, queue_size=10)        
