@@ -210,8 +210,13 @@ def send_to_inspector(poi_poses: List[Pose], inspection_poses: List[Pose]):
     inspector_poi_pub = rospy.Publisher('inspector/poi_poses', PoseArray, queue_size=10)
     inspection_inspection_pub = rospy.Publisher('inspector/inspection_poses', PoseArray, queue_size=10)
 
-    inspector_poi_pub.publish(poi_poses)
-    inspection_inspection_pub.publish(inspection_poses)
+    poi_pose_array = PoseArray()
+    poi_pose_array.poses = poi_poses
+    inspection_pose_array = PoseArray()
+    inspection_pose_array.poses = inspection_poses
+
+    inspector_poi_pub.publish(poi_pose_array)
+    inspection_inspection_pub.publish(inspection_pose_array)
 
 def get_point_between_at_distance(p1: Point, p2: Point, distance):
     # Return a point p3 between p1 and p2 at given distance from p1

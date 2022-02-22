@@ -90,7 +90,7 @@ if __name__ == '__main__':
         print(inspection_poses)
         print()
 
-        # TODO: Send the proposed inspection poses to an Inspector node
+        send_to_inspector([point.point for point in points_of_interest], inspection_poses)
 
         while True:
             sleep(1)
