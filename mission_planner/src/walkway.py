@@ -1,22 +1,22 @@
-from ast import walk
 import pymesh
 from utils import *
 
-class WalkwayProcessor():
+class Walkway():
     def __init__(
         self, 
-        huldra_models_path = '../../resources/huldra-models/',
-        huldra_walkway_path = 'huldra-smaller-walkway/meshes/',
-        huldra_walkway_filename = 'huldra-smaller-walkway.obj',
+        models_path      = '../../resources/huldra-models/',
+        walkway_path     = 'huldra-smaller-walkway/meshes/',
+        walkway_filename = 'huldra-smaller-walkway.obj',
         ):
-        self.huldra_models_path = huldra_models_path
-        self.huldra_walkway_path = huldra_walkway_path
-        self.huldra_walkway_filename = huldra_walkway_filename
+
+        self.models_path      = models_path
+        self.walkway_path     = walkway_path
+        self.walkway_filename = walkway_filename
 
         self.walkway_line = self._find_walkway_line()
 
     def _find_walkway_line(self):
-        walkway_mesh = pymesh.load_mesh(self.huldra_models_path + self.huldra_walkway_path + self.huldra_walkway_filename)
+        walkway_mesh = pymesh.load_mesh(self.models_path + self.walkway_path + self.walkway_filename)
 
         walkway_mesh.add_attribute('face_normal')
         face_normals = walkway_mesh.get_face_attribute('face_normal')
@@ -42,6 +42,8 @@ class WalkwayProcessor():
             face_centroids_upwards[i] = face_centroids_converted[index]
 
         # TODO: Find end points on walkway and add them to the returned list
+
+        # TODO: Return the list sorted, from one end of the walkway to the other end
         
         return face_centroids_upwards
     
@@ -63,7 +65,7 @@ class WalkwayProcessor():
 
             j = 1
             while distance_p0_p1 - (distance_walked_from_p0 + next_distance_to_walk) > 0:
-                resolution_points.append(self.get_point_between_at_distance(p0, p1, distance_walked_from_p0 + next_distance_to_walk))
+                resolution_points.append(get_point_between_at_distance(p0, p1, distance_walked_from_p0 + next_distance_to_walk))
                 distance_walked_from_p0 += next_distance_to_walk
 
                 next_distance_to_walk = resolution
@@ -74,14 +76,3 @@ class WalkwayProcessor():
         resolution_points.append(self.walkway_line[-1])
 
         return resolution_points
-
-    def get_point_between_at_distance(self, p1, p2, distance):
-        # Return a point c between a and b at distance from a
-        distance_between_points = get_distance_between_points(p1, p2)
-        p3 = [0, 0, 0]
-        p3[0] = p1[0] + (distance/distance_between_points) * (p2[0] - p1[0])
-        p3[1] = p1[1] + (distance/distance_between_points) * (p2[1] - p1[1])
-        # TODO: Take z coordinates into account
-        p3[2] = p1[2]
-        
-        return p3

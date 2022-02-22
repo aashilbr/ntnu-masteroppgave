@@ -205,9 +205,20 @@ def get_distance_between_points(p1, p2):
 
 def send_to_inspector(poi_poses: PoseArray, inspection_poses: PoseArray):
     print('Publishing poses to inspector node...')
-    
+
     inspector_poi_pub = rospy.Publisher('inspector/poi_poses', PoseArray, queue_size=10)
     inspection_inspection_pub = rospy.Publisher('inspector/inspection_poses', PoseArray, queue_size=10)
 
     inspector_poi_pub.publish(poi_poses)
     inspection_inspection_pub.publish(inspection_poses)
+
+def get_point_between_at_distance(p1, p2, distance):
+    # Return a point p3 between p1 and p2 at given distance from p1
+    distance_between_points = get_distance_between_points(p1, p2)
+    p3 = [0, 0, 0]
+    p3[0] = p1[0] + (distance/distance_between_points) * (p2[0] - p1[0])
+    p3[1] = p1[1] + (distance/distance_between_points) * (p2[1] - p1[1])
+    # TODO: Take z coordinates into account
+    p3[2] = p1[2]
+    
+    return p3

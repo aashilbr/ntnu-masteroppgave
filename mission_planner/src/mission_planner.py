@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import rospy
 from utils import *
-from walkway import WalkwayProcessor
+from walkway import Walkway
 from POI import POI
 from time import sleep
 import constants
@@ -10,10 +10,10 @@ class MissionPlanner:
     def __init__(self, points_of_interest = []):
         self.points_of_interest = points_of_interest
 
-        self.wp = WalkwayProcessor(
-            huldra_models_path = '/home/catkin_ws/src/mission_planner/src/huldra-models/',
-            huldra_walkway_path = 'huldra-smaller-walkway/meshes/',
-            huldra_walkway_filename = 'huldra-smaller-walkway.obj'
+        self.wp = Walkway(
+            models_path = '/home/catkin_ws/src/mission_planner/src/huldra-models/',
+            walkway_path = 'huldra-smaller-walkway/meshes/',
+            walkway_filename = 'huldra-smaller-walkway.obj'
         )
 
         self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
