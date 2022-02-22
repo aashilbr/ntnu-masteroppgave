@@ -57,7 +57,12 @@ class MissionPlanner:
             possible_inspection_points_scores[i] = score
 
         possible_inspection_points_sorted = [x for _, x in sorted(zip(possible_inspection_points_scores, possible_inspection_points), key=lambda pair: pair[0])]
-        inspection_pose = possible_inspection_points_sorted[0]
+        inspection_point = possible_inspection_points_sorted[0]
+
+        # TODO: Calculate the orientation that turns the inspector towards the POI
+
+        inspection_pose = pose_from_position_and_orientation(inspection_point.x, inspection_point.y, inspection_point.z)
+
         return inspection_pose
     
     def will_inspector_crash_at_point(self, point):
@@ -90,9 +95,9 @@ if __name__ == '__main__':
         print(inspection_poses)
         print()
 
-        send_to_inspector([point.point for point in points_of_interest], inspection_poses)
 
         while True:
+            send_to_inspector([point.pose for point in points_of_interest], inspection_poses)
             sleep(1)
 
     except rospy.ROSInterruptException:
