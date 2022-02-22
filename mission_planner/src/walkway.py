@@ -49,14 +49,39 @@ class WalkwayProcessor():
         return self.walkway_line
     
     def get_points_along_walkway_with_resolution(self, resolution):
-        if resolution == 0:
-            return self.walkway_line
-        else:
-            points = []
-            points.append(self.walkway_line[0])
-            points.append(self.walkway_line[-1])
+        resolution_points = []
+        resolution_points.append(self.walkway_line[0])
 
-            #for i in len(0, len(walkway_line) - 1):
-            #    distance_to_next_point = get_distance_between_points(walkway_line[i], walkway_line[i + 1])
+        unused_distance_previous_iteration = 0
+        for i in range(0, len(self.walkway_line) - 1):
+            p0 = self.walkway_line[i]
+            p1 = self.walkway_line[i + 1]
+
+            distance_p0_p1 = get_distance_between_points(p0, p1)
+            distance_walked_from_p0 = 0
+            next_distance_to_walk = resolution - unused_distance_previous_iteration
+
+            j = 1
+            while distance_p0_p1 - (distance_walked_from_p0 + next_distance_to_walk) > 0:
+                resolution_points.append(self.get_point_between_at_distance(p0, p1, distance_walked_from_p0 + next_distance_to_walk))
+                distance_walked_from_p0 += next_distance_to_walk
+
+                next_distance_to_walk = resolution
+                unused_distance_previous_iteration = 0
+                j += 1
+            unused_distance_previous_iteration = unused_distance_previous_iteration + distance_p0_p1 - distance_walked_from_p0
         
-        return points
+        resolution_points.append(self.walkway_line[-1])
+
+        return resolution_points
+
+    def get_point_between_at_distance(self, p1, p2, distance):
+        # Return a point c between a and b at distance from a
+        distance_between_points = get_distance_between_points(p1, p2)
+        p3 = [0, 0, 0]
+        p3[0] = p1[0] + (distance/distance_between_points) * (p2[0] - p1[0])
+        p3[1] = p1[1] + (distance/distance_between_points) * (p2[1] - p1[1])
+        # TODO: Take z coordinates into account
+        p3[2] = p1[2]
+        
+        return p3

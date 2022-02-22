@@ -33,10 +33,11 @@ class MissionPlanner:
 
         # TODO: Redo all of this with higher resolution, if we find any interesting parts of the walkway
 
-        possible_inspection_points = self.wp.get_points_along_walkway_with_resolution(10)
+        resolution = 1
+        possible_inspection_points = self.wp.get_points_along_walkway_with_resolution(resolution)
         publish_markers(possible_inspection_points, r=0.1, g=0.5, b=0.1)
         
-        print('Possible inspection points (resolution 10):')
+        print('Possible inspection points (resolution', resolution, '):')
         for point in possible_inspection_points:
             print(point)
         print()
