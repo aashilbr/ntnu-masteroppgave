@@ -95,10 +95,11 @@ if __name__ == '__main__':
         print(inspection_poses)
         print()
 
-
-        while True:
+        i = 0
+        while i <= 3:
             send_to_inspector([point.pose for point in points_of_interest], inspection_poses)
             sleep(1)
+            i += 1
 
     except rospy.ROSInterruptException:
         pass
