@@ -73,3 +73,12 @@ services:
       - GAZEBO_MASTER_URI=http://gazebo:11345
     volumes:
       - ./resources/huldra-models:/home/catkin_ws/src/mission_planner/src/huldra-models:rw
+  
+  inspector:
+    container_name: inspector
+    build:
+      context: ./inspector
+      dockerfile: Dockerfile
+    environment:
+      - ROS_MASTER_URI=http://ros_noetic:11311
+      - GAZEBO_MASTER_URI=http://gazebo:11345
