@@ -58,10 +58,8 @@ class MissionPlanner:
 
         possible_inspection_points_sorted = [x for _, x in sorted(zip(possible_inspection_points_scores, possible_inspection_points), key=lambda pair: pair[0])]
         inspection_point = possible_inspection_points_sorted[0]
-
-        # TODO: Calculate the orientation that turns the inspector towards the POI
-
-        inspection_pose = pose_from_position_and_orientation(inspection_point.x, inspection_point.y, inspection_point.z)
+        inspection_orientation = get_orientation_towards_point(inspection_point, poi.point)
+        inspection_pose = Pose(inspection_point, inspection_orientation)
 
         return inspection_pose
     

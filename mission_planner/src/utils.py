@@ -228,3 +228,11 @@ def get_point_between_at_distance(p1: Point, p2: Point, distance):
     p3.z = p1.z
     
     return p3
+
+def get_orientation_towards_point(p1, p2):
+    # Return the orientation that points p1 towards p2
+
+    # TODO: Implement this thing
+
+    orientation = Quaternion(0, 0, 0, 1)
+    return orientation

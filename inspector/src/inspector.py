@@ -44,7 +44,8 @@ class Inspector():
         return False
 
     def inspect(self):
-        pass
+        print('Inspecting...')
+        print(self._inspection_poses)
 
 if __name__ == '__main__':
     rospy.init_node('inspector', anonymous=True)
@@ -52,9 +53,7 @@ if __name__ == '__main__':
         add_model()
         inspector = Inspector()
         while not inspector.has_poses():
-            print(inspector._poi_poses)
             sleep(1)
-        print('Inspector has poses')
         inspector.inspect()
         
     except rospy.ROSInterruptException:
