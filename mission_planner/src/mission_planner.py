@@ -47,11 +47,11 @@ class MissionPlanner:
             possible_inspection_point = possible_inspection_points[i]
             score = 0
 
-            distance_to_poi = get_distance_between_points(possible_inspection_point, poi.position)
-            will_inspector_crash = self.will_inspector_crash_at_position(possible_inspection_point)
-            are_there_obstacles = self.are_there_obstacles_between(possible_inspection_point, poi.position)
+            distance_to_poi = get_distance_between_points(possible_inspection_point, poi.point)
+            will_inspector_crash = self.will_inspector_crash_at_point(possible_inspection_point)
+            are_there_obstacles = self.are_there_obstacles_between(possible_inspection_point, poi.point)
             is_poi_face_against_inspection_point = self.is_poi_face_against_inspection_point(poi, possible_inspection_point)
-            score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.position)
+            score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.point)
 
             score = distance_to_poi # TODO: Find a better score function
             possible_inspection_points_scores[i] = score
@@ -60,7 +60,7 @@ class MissionPlanner:
         inspection_pose = possible_inspection_points_sorted[0]
         return inspection_pose
     
-    def will_inspector_crash_at_position(self, position):
+    def will_inspector_crash_at_point(self, point):
         # TODO: Check if robot crashes at the given point. E.g. are there anything placed on the walkway?
         return False # Dummy return value
     
@@ -72,7 +72,7 @@ class MissionPlanner:
         # TODO: Check if we can inspect the valve, using the discovered valve inspection direction (poi.direction). Need to implement poi.direction first
         return True # Dummy return value
 
-    def get_score_from_image_analysis(self, inspection_point, poi_position):
+    def get_score_from_image_analysis(self, inspection_point, poi_point):
         # Use camera plugin to take an image of POI from inspection position, apply image analysis and get a score.
         return 0 # Dummy return value
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     try:
         # TODO: Use Huldra model with multiple points of interest
         points_of_interest = [
-            POI('valve', [0, -20, 2.5])
+            POI('valve', Point(0, -20, 2.5), Quaternion(0, 0, 0, 1))
         ]
         mission_planner = MissionPlanner(points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()

@@ -1,7 +1,17 @@
+from geometry_msgs.msg import Quaternion, Pose, Point
+from tf.transformations import quaternion_from_euler
+
 class POI():
-    def __init__(self, identifier, position = [0, 0, 0], direction = [0, 0, 0]):
+    def __init__(self, identifier, pose: Pose):
         self.identifier = identifier
-        self.position = position
-        self.direction = direction
+        self.pose = pose
+        self.point = pose.position
+        self.orientation = pose.orientation
+
+    def __init__(self, identifier, point: Point, orientation: Quaternion):
+        self.identifier = identifier
+        self.point = point
+        self.orientation = orientation
+        self.pose = Pose(point, orientation)
 
         # TODO: Find which gazebo direction corresponds to valve "inspection direction" and store that in self.direction

@@ -44,8 +44,12 @@ class Walkway():
         # TODO: Find end points on walkway and add them to the returned list
 
         # TODO: Return the list sorted, from one end of the walkway to the other end
+
+        points = [None] * len(face_centroids_upwards)
+        for point in face_centroids_upwards:
+            points[i] = Point(face_centroids_upwards[0], face_centroids_upwards[1], face_centroids_upwards[2])
         
-        return face_centroids_upwards
+        return points
     
     def get_walkway_line(self):
         return self.walkway_line

@@ -6,6 +6,7 @@ from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler
 from time import sleep
 from math import sqrt
+from typing import List
 
 def pose_from_position_and_orientation(
     x, 
@@ -46,7 +47,7 @@ def obj_to_gazebo_coordinates_only_roll(coordinates):
 
 previous_marker_id = 0
 def make_marker(
-    point, 
+    point: Point, 
     r = 0.1, 
     g = 0.1, 
     b = 0.5, 
@@ -58,7 +59,7 @@ def make_marker(
     this_marker_id = previous_marker_id + 1
     previous_marker_id = this_marker_id
 
-    pose = pose_from_position_and_orientation(point[0], point[1], point[2])
+    pose = pose_from_position_and_orientation(point.x, point.y, point.z)
 
     marker = Marker()
     marker.header = Header()
@@ -122,7 +123,7 @@ def publish_markers(
     pub.publish(marker_array_msg)
 
 def make_line_marker(
-    points, 
+    points: List[Point], 
     r = 0.5, 
     g = 0.1, 
     b = 0.1, 
@@ -136,7 +137,7 @@ def make_line_marker(
 
     marker_points = []
     for point in points:
-        marker_points.append(Point(point[0], point[1], point[2]))
+        marker_points.append(Point(point.x, point.y, point.z))
 
     marker = Marker()
     marker.header = Header()
@@ -199,11 +200,11 @@ def publish_line_markers(
     sleep(3)
     pub.publish(marker_array_msg)
     
-def get_distance_between_points(p1, p2):
-    distance = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 + (p2[2] - p1[2])**2 )
+def get_distance_between_points(p1: Point, p2: Point):
+    distance = sqrt( (p2.x - p1.x)**2 + (p2.y - p1.y)**2 + (p2.z - p1.z)**2 )
     return distance
 
-def send_to_inspector(poi_poses: PoseArray, inspection_poses: PoseArray):
+def send_to_inspector(poi_poses: List[Pose], inspection_poses: List[Pose]):
     print('Publishing poses to inspector node...')
 
     inspector_poi_pub = rospy.Publisher('inspector/poi_poses', PoseArray, queue_size=10)
@@ -212,13 +213,13 @@ def send_to_inspector(poi_poses: PoseArray, inspection_poses: PoseArray):
     inspector_poi_pub.publish(poi_poses)
     inspection_inspection_pub.publish(inspection_poses)
 
-def get_point_between_at_distance(p1, p2, distance):
+def get_point_between_at_distance(p1: Point, p2: Point, distance):
     # Return a point p3 between p1 and p2 at given distance from p1
     distance_between_points = get_distance_between_points(p1, p2)
-    p3 = [0, 0, 0]
-    p3[0] = p1[0] + (distance/distance_between_points) * (p2[0] - p1[0])
-    p3[1] = p1[1] + (distance/distance_between_points) * (p2[1] - p1[1])
+    p3 = Point(0, 0, 0)
+    p3.x = p1.x + (distance/distance_between_points) * (p2.x - p1.x)
+    p3.y = p1.y + (distance/distance_between_points) * (p2.y - p1.y)
     # TODO: Take z coordinates into account
-    p3[2] = p1[2]
+    p3.z = p1.z
     
     return p3
