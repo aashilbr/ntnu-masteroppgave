@@ -229,10 +229,26 @@ def get_point_between_at_distance(p1: Point, p2: Point, distance):
     
     return p3
 
-def get_orientation_towards_point(p1, p2):
+def get_orientation_towards_point(p1: Point, p2: Point):
     # Return the orientation that points p1 towards p2
+    # https://stackoverflow.com/questions/1171849/finding-quaternion-representing-the-rotation-from-one-vector-to-another/1171995#1171995
 
-    # TODO: Implement this thing
+    v1 = [p1.x, p1.y, p1.z]
+    v2 = [p2.x, p2.y, p2.z]
 
-    orientation = Quaternion(0, 0, 0, 1)
+    xyz = cross_product(v1, v2)
+    z = sqrt( (len(v1)**2) * (len(v2)**2) ) + dot_product(v1, v2)
+
+    orientation = Quaternion(xyz[0], xyz[1], xyz[2], z)
     return orientation
+
+def cross_product(a, b):
+    # https://stackoverflow.com/questions/1984799/cross-product-of-two-vectors-in-python
+    c = [a[1]*b[2] - a[2]*b[1],
+         a[2]*b[0] - a[0]*b[2],
+         a[0]*b[1] - a[1]*b[0]]
+
+    return c
+
+def dot_product(a, b):
+    return sum( [a[i]*b[i] for i in range(len(b))] )
