@@ -27,6 +27,8 @@ services:
       - "11345:11345"
     depends_on:
       - ros_noetic
+    devices:
+      - "/dev/dri:/dev/dri"
   
   rviz:
     container_name: rviz
