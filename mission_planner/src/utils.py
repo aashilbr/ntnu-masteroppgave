@@ -114,9 +114,9 @@ def publish_markers(
     marker_array_msg.markers = markers
 
     print('Waiting for /markers topic...')
-    _, subs = rostopic.get_topic_list()
     markersTopicAvailable = False
     while not markersTopicAvailable:
+        _, subs = rostopic.get_topic_list()
         for topic, _, _ in subs:
             if topic == '/markers':
                 markersTopicAvailable = True
