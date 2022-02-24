@@ -82,8 +82,10 @@ if __name__ == '__main__':
     try:
         # TODO: Use Huldra model with multiple points of interest
         points_of_interest = [
-            POI('valve1', Point(0, -20, 2.5), Quaternion(0, 0, 0, 1)),
-            POI('valve2', Point(5, -23, 2.5), Quaternion(0, 0, 0, 1))
+            POI('valve1', Point(0, -20, 2), Quaternion(0, 0, 0, 1)),
+            POI('valve2', Point(5, -23, 5), Quaternion(0, 0, 0, 1)),
+            POI('valve3', Point(0, -26, 10), Quaternion(0, 0, 0, 1)),
+            POI('valve3', Point(-2, -24, 5), Quaternion(0, 0, 0, 1))
         ]
 
         mission_planner = MissionPlanner(points_of_interest)
