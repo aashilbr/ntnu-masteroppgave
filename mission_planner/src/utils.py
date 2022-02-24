@@ -5,7 +5,7 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler
 from time import sleep
-from math import sqrt
+from math import sqrt, cos, atan2, sin
 from typing import List
 
 def pose_from_position_and_orientation(
@@ -235,20 +235,38 @@ def get_point_between_at_distance(p1: Point, p2: Point, distance):
     
     return p3
 
-def get_orientation_towards_point(p1: Point, p2: Point):
-    # Return the orientation that points p1 towards p2
-    # https://stackoverflow.com/questions/1171849/finding-quaternion-representing-the-rotation-from-one-vector-to-another/1171995#1171995
+def get_orientation_towards_point(initial_point: Point, target_point: Point):
+    world_up = [0, 0, 1]
+    world_front = [1, 0, 0]
+    
+    vector_initial_point = [initial_point.x, initial_point.y, initial_point.z]
+    vector_target_point = [target_point.x, target_point.y, target_point.z]
 
-    v1 = [p1.x, p1.y, p1.z]
-    v2 = [p2.x, p2.y, p2.z]
+    look_direction = sub(vector_target_point, vector_initial_point)
+    look_direction = normalize(look_direction)
 
-    xyz = cross_product(v1, v2)
-    z = sqrt( (len(v1)**2) * (len(v2)**2) ) + dot_product(v1, v2)
+    # Angle between world_front and look_direction (in xy plane). Rotated around world_up
+    yaw_angle = atan2(look_direction[1], look_direction[0]) - atan2(world_front[1], world_front[0])
 
-    orientation = Quaternion(xyz[0], xyz[1], xyz[2], z)
+    # Angle between yaw_direction and look_direction, rotated around side_axis
+    look_direction_xz = [
+        look_direction[0] * cos(yaw_angle) - look_direction[1] * sin(yaw_angle),
+        look_direction[0] * sin(yaw_angle) - look_direction[1] * cos(yaw_angle),
+        look_direction[2]
+    ]
+    yaw_direction_xz = [look_direction_xz[0], look_direction_xz[1], 0]
+
+    pitch_angle = atan2(look_direction_xz[2], look_direction_xz[0]) - atan2(yaw_direction_xz[2], yaw_direction_xz[0])
+    if pitch_angle > 0:
+        pitch_angle = -pitch_angle
+
+    q = quaternion_from_euler(0, pitch_angle, yaw_angle)
+    q = normalize(q)
+
+    orientation = Quaternion(q[0], q[1], q[2], q[3])
     return orientation
 
-def cross_product(a, b):
+def cross(a, b):
     # https://stackoverflow.com/questions/1984799/cross-product-of-two-vectors-in-python
     c = [a[1]*b[2] - a[2]*b[1],
          a[2]*b[0] - a[0]*b[2],
@@ -256,5 +274,18 @@ def cross_product(a, b):
 
     return c
 
-def dot_product(a, b):
-    return sum( [a[i]*b[i] for i in range(len(b))] )
+def magnitude(v):
+    return sqrt(sum(v[i]*v[i] for i in range(len(v))))
+
+def add(u, v):
+    return [ u[i]+v[i] for i in range(len(u)) ]
+
+def sub(u, v):
+    return [ u[i]-v[i] for i in range(len(u)) ]
+
+def dot(u, v):
+    return sum(u[i]*v[i] for i in range(len(u)))
+
+def normalize(v):
+    vmag = magnitude(v)
+    return [ v[i]/vmag  for i in range(len(v)) ]
