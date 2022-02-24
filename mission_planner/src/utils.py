@@ -243,7 +243,6 @@ def get_orientation_towards_point(initial_point: Point, target_point: Point):
     vector_target_point = [target_point.x, target_point.y, target_point.z]
 
     look_direction = sub(vector_target_point, vector_initial_point)
-    look_direction = normalize(look_direction)
 
     # Angle between world_front and look_direction (in xy plane). Rotated around world_up
     yaw_angle = atan2(look_direction[1], look_direction[0]) - atan2(world_front[1], world_front[0])
@@ -266,26 +265,12 @@ def get_orientation_towards_point(initial_point: Point, target_point: Point):
     orientation = Quaternion(q[0], q[1], q[2], q[3])
     return orientation
 
-def cross(a, b):
-    # https://stackoverflow.com/questions/1984799/cross-product-of-two-vectors-in-python
-    c = [a[1]*b[2] - a[2]*b[1],
-         a[2]*b[0] - a[0]*b[2],
-         a[0]*b[1] - a[1]*b[0]]
-
-    return c
-
 def magnitude(v):
     return sqrt(sum(v[i]*v[i] for i in range(len(v))))
-
-def add(u, v):
-    return [ u[i]+v[i] for i in range(len(u)) ]
-
-def sub(u, v):
-    return [ u[i]-v[i] for i in range(len(u)) ]
-
-def dot(u, v):
-    return sum(u[i]*v[i] for i in range(len(u)))
 
 def normalize(v):
     vmag = magnitude(v)
     return [ v[i]/vmag  for i in range(len(v)) ]
+
+def sub(u, v):
+    return [ u[i]-v[i] for i in range(len(u)) ]
