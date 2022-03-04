@@ -37,6 +37,10 @@ RUN python3 setup.py build
 RUN python3 setup.py install
 
 WORKDIR /home/
+COPY ./requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt
+
+WORKDIR /home/
 RUN mkdir -p catkin_ws/src
 COPY ./ catkin_ws/src/mission_planner
 
