@@ -98,12 +98,21 @@ if __name__ == '__main__':
     rospy.init_node('mission_planner', anonymous=True)
     trimesh.util.attach_to_log()
     try:
-        # TODO: Use Huldra model with multiple points of interest
+        coords0 = obj_to_gazebo_coordinates([-117.014, 30.016, 304.500])
+        coords1 = obj_to_gazebo_coordinates([-115.739, 31.149, 304.950])
+        coords2 = obj_to_gazebo_coordinates([-114.401, 30.099, 307.900])
+        coords3 = obj_to_gazebo_coordinates([-112.550, 30.238, 310.292])
+
         points_of_interest = [
-            POI('valve1', Point(0, -20, 2), Quaternion(0, 0, 0, 1)),
-            POI('valve2', Point(5, -23, 5), Quaternion(0, 0, 0, 1)),
-            POI('valve3', Point(0, -26, 10), Quaternion(0, 0, 0, 1)),
-            POI('valve3', Point(-2, -24, 5), Quaternion(0, 0, 0, 1))
+            #POI('valve1', Point(0, -20, 2), Quaternion(0, 0, 0, 1)),
+            #POI('valve2', Point(5, -23, 5), Quaternion(0, 0, 0, 1)),
+            #POI('valve3', Point(0, -26, 10), Quaternion(0, 0, 0, 1)),
+            #POI('valve3', Point(-2, -24, 5), Quaternion(0, 0, 0, 1))
+
+            POI('20-2000VF', Point(coords0[0], coords0[1], coords0[2]), Quaternion(0, 0, 0, 1)), # "x": 304500, "y": 117014, "z": 30016
+            POI('20-2007VF', Point(coords1[0], coords1[1], coords1[2]), Quaternion(0, 0, 0, 1)), # "x": 304950, "y": 115739, "z": 31149
+            POI('20-2003VF', Point(coords2[0], coords2[1], coords2[2]), Quaternion(0, 0, 0, 1)), # "x": 307900, "y": 114401, "z": 30099
+            POI('20-2006PL', Point(coords3[0], coords3[1], coords3[2]), Quaternion(0, 0, 0, 1))  # "x": 310292, "y": 112550, "z": 30238
         ]
 
         mission_planner = MissionPlanner(points_of_interest)
