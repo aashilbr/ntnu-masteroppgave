@@ -70,20 +70,24 @@ class MissionPlanner:
         return False # Dummy return value
     
     def are_there_obstacles_between(self, p1: Point, p2: Point):
-        # TODO: Find obstacles with raycasting
-
         print('Rayfunction start')
 
-        ray_origin = np.array([p1.x, p1.y, p1.z])
-        ray_direction = np.array([p2.x - p1.x, p2.y - p1.y, p2.z - p1.z])
+        ray_origin = np.array(gazebo_to_obj_coordinates([p1.x, p1.y, p1.z]))
+        ray_direction = np.array(normalize(gazebo_to_obj_coordinates_only_roll([p2.x - p1.x, p2.y - p1.y, p2.z - p1.z])))
+
+        print(p1)
+        print(p2)
+        print(ray_origin)
+        print(ray_direction)
 
         locations, index_ray, index_tri = self.mesh.ray.intersects_location(ray_origins=[ray_origin], ray_directions=[ray_direction])
         print(locations)
         print(index_ray)
         print(index_tri)
 
-        print('Rayfunction end')
+        # TODO: Filter intersections by distance, discard those with distance longer than distance p1-p2
 
+        print('Rayfunction end')
         return False # Dummy return value
     
     def is_poi_face_against_inspection_point(self, poi: POI, point):

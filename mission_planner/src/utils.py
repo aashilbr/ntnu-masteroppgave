@@ -45,6 +45,32 @@ def obj_to_gazebo_coordinates_only_roll(coordinates):
     z = b
     return [x, y, z]
 
+def gazebo_to_obj_coordinates(coordinates):
+    x = coordinates[0]
+    y = coordinates[1]
+    z = coordinates[2]
+
+    x = x - 116
+    y = y - 287
+    z = z + 27
+
+    a = x
+    c = -y
+    b = z
+
+    return [a, b, c]
+
+def gazebo_to_obj_coordinates_only_roll(coordinates):
+    x = coordinates[0]
+    y = coordinates[1]
+    z = coordinates[2]
+
+    a = x
+    c = -y
+    b = z
+
+    return [a, b, c]
+
 previous_marker_id = 0
 def make_marker(
     point: Point, 
