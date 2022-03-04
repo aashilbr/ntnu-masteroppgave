@@ -5,6 +5,8 @@ from walkway import Walkway
 from POI import POI
 from time import sleep
 import constants
+import trimesh
+import numpy as np
 
 class MissionPlanner:
     def __init__(self, points_of_interest = []):
@@ -20,6 +22,8 @@ class MissionPlanner:
         self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
+
+        self.mesh = trimesh.load('/home/catkin_ws/src/mission_planner/src/huldra-models/huldra-smaller/meshes/huldra-smaller.obj', force='mesh')
 
     def find_inspection_poses(self):
         inspection_poses = [None] * len(self.points_of_interest)
@@ -65,8 +69,21 @@ class MissionPlanner:
         # TODO: Check if robot crashes at the given point. E.g. are there anything placed on the walkway?
         return False # Dummy return value
     
-    def are_there_obstacles_between(self, p1, p2):
+    def are_there_obstacles_between(self, p1: Point, p2: Point):
         # TODO: Find obstacles with raycasting
+
+        print('Rayfunction start')
+
+        ray_origin = np.array([p1.x, p1.y, p1.z])
+        ray_direction = np.array([p2.x - p1.x, p2.y - p1.y, p2.z - p1.z])
+
+        locations, index_ray, index_tri = self.mesh.ray.intersects_location(ray_origins=[ray_origin], ray_directions=[ray_direction])
+        print(locations)
+        print(index_ray)
+        print(index_tri)
+
+        print('Rayfunction end')
+
         return False # Dummy return value
     
     def is_poi_face_against_inspection_point(self, poi: POI, point):
@@ -79,6 +96,7 @@ class MissionPlanner:
 
 if __name__ == '__main__':
     rospy.init_node('mission_planner', anonymous=True)
+    trimesh.util.attach_to_log()
     try:
         # TODO: Use Huldra model with multiple points of interest
         points_of_interest = [
