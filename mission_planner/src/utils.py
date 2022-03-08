@@ -120,6 +120,7 @@ def publish_marker(
 
     publish_markers([point], r, g, b, a, type, scale)
 
+have_slept_in_publish_markers = False
 def publish_markers(
     points,
     r = 0.1, 
@@ -148,7 +149,11 @@ def publish_markers(
                 markersTopicAvailable = True
                 break
     
-    sleep(3)
+    global have_slept_in_publish_markers
+    if not have_slept_in_publish_markers:
+        have_slept_in_publish_markers = True
+        sleep(3)
+        
     pub.publish(marker_array_msg)
 
 def make_line_marker(
