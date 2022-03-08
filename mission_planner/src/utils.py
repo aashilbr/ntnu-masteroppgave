@@ -153,7 +153,7 @@ def publish_markers(
     if not have_slept_in_publish_markers:
         have_slept_in_publish_markers = True
         sleep(3)
-        
+
     pub.publish(marker_array_msg)
 
 def make_line_marker(
@@ -313,12 +313,14 @@ def values_to_colors(scores, lower_is_greener = True):
 
     colors = [0, 0, 0] * len(scores)
     for i in range(0, len(scores)):
+        r = ( (scores[i] - min_score) / max_normalized)
+        g = 1 - ( (scores[i] - min_score) / max_normalized)
         b = 0
-        if lower_is_greener:
-            g = ( (scores[i] - min_score) / max_normalized)
-            r = 1 - ( (scores[i] - min_score) / max_normalized)
-        else:
-            pass
+        
+        if not lower_is_greener
+        tmp_r = r
+        r = g
+        g = tmp_r
 
         colors[i] = [r, g, b]
 
