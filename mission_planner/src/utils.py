@@ -300,3 +300,21 @@ def normalize(v):
 
 def sub(u, v):
     return [ u[i]-v[i] for i in range(len(u)) ]
+
+def values_to_colors(scores, lower_is_greener = True):
+    min_score = min(scores)
+    max_score = max(scores)
+    max_normalized = max_score - min_score
+
+    colors = [0, 0, 0] * len(scores)
+    for i in range(0, len(scores)):
+        b = 0
+        if lower_is_greener:
+            g = ( (scores[i] - min_score) / max_normalized)
+            r = 1 - ( (scores[i] - min_score) / max_normalized)
+        else:
+            pass
+
+        colors[i] = [r, g, b]
+
+    return colors
