@@ -37,13 +37,15 @@ class MissionPlanner:
 
         # TODO: Redo all of this with higher resolution, if we find any interesting parts of the walkway
 
-        resolution = 1
+        resolution = 0.1
         possible_inspection_points = self.wp.get_points_along_walkway_with_resolution(resolution)
         publish_markers(possible_inspection_points, r=0.1, g=0.5, b=0.1)
         print('Finding possible inspection points with resolution', resolution)
 
         possible_inspection_points_scores = [0] * len(possible_inspection_points)
         for i in range(0, len(possible_inspection_points)):
+            print(i, '/', len(possible_inspection_points))
+
             possible_inspection_point = possible_inspection_points[i]
             score = 0
 
@@ -73,7 +75,7 @@ class MissionPlanner:
         inspection_orientation = get_orientation_towards_point(inspection_point, poi.point)
         inspection_pose = Pose(inspection_point, inspection_orientation)
 
-        #publish_marker(inspection_point, r=1.0, g=1.0, b=0.0, scale=0.2)
+        publish_marker(inspection_point, r=0.0, g=1.0, b=0.0, scale=0.3)
 
         return inspection_pose
     
