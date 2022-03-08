@@ -317,10 +317,10 @@ def values_to_colors(scores, lower_is_greener = True):
         g = 1 - ( (scores[i] - min_score) / max_normalized)
         b = 0
         
-        if not lower_is_greener
-        tmp_r = r
-        r = g
-        g = tmp_r
+        if not lower_is_greener:
+            tmp_r = r
+            r = g
+            g = tmp_r
 
         colors[i] = [r, g, b]
 
