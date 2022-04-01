@@ -10,6 +10,7 @@
                         <uri>model://huldra-models/huldra-smaller/meshes/huldra-smaller.obj</uri>
                     </mesh>
                 </geometry>
+                <cast_shadows>0</cast_shadows>
             </visual>
         </link>
     </model>
