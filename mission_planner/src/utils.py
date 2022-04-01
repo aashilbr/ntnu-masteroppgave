@@ -325,3 +325,24 @@ def values_to_colors(scores, lower_is_greener = True):
         colors[i] = [r, g, b]
 
     return colors
+
+# Not sure if this thing is finished
+def extract_object_from_obj(file, object_name):
+    with open(file) as f:
+        i = 0
+        is_writing_object = False
+        new_object_string = ''
+        for line in f:
+            if line[:2] == 'o ' and ( line[2:2+len(object_name)] == object_name or line[3:3+len(object_name)] == object_name ):
+                object_line_number = i
+                is_writing_object = True
+            if is_writing_object:
+                if line[:2] == 'o ' and i > object_line_number:
+                    is_writing_object = False
+                    break
+                else:
+                    new_object_string += line
+            
+            i += 1
+        
+        return new_object_string
