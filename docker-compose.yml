@@ -56,15 +56,6 @@ services:
     volumes:
       - ./resources/huldra-models:/home/catkin_ws/src/model_spawner/src/huldra-models:rw
   
-  robot:
-    container_name: robot
-    build:
-      context: ./robot
-      dockerfile: Dockerfile
-    environment:
-      - ROS_MASTER_URI=http://ros_noetic:11311
-      - GAZEBO_MASTER_URI=http://gazebo:11345
-  
   mission_planner:
     container_name: mission_planner
     build:
