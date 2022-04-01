@@ -20,12 +20,4 @@ RUN \
   rosdep update && \
   rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro noetic -y
 
-#COPY ./keyboard /etc/default/keyboard
-#RUN \
-#  apt-get update && \
-#  DEBIAN_FRONTEND=noninteractive \
-#  apt-get install -y \
-#  ros-noetic-rqt \
-#  ros-noetic-rqt-common-plugins
-
 CMD /home/catkin_ws/src/ros_noetic/entrypoint.sh
