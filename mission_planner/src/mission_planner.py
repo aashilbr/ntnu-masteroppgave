@@ -23,7 +23,8 @@ class MissionPlanner:
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
 
-        self.mesh = trimesh.load('/home/catkin_ws/src/mission_planner/src/huldra-models/huldra-smaller/meshes/huldra-smaller.obj', force='mesh')
+        mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/huldra-smaller/meshes/huldra-smaller.obj'
+        self.mesh = trimesh.load(mesh_file, force='mesh')
 
     def find_inspection_poses(self):
         inspection_poses = [None] * len(self.points_of_interest)
@@ -88,10 +89,15 @@ class MissionPlanner:
         ray_origin_point = Point(ray_origin[0], ray_origin[1], ray_origin[2])
         ray_direction = np.array(normalize(gazebo_to_obj_coordinates_only_roll([p2.x - p1.x, p2.y - p1.y, p2.z - p1.z])))
 
-        intersections, index_ray, index_tri = self.mesh.ray.intersects_location(ray_origins=[ray_origin], ray_directions=[ray_direction])
+        intersections, _, face_indices = self.mesh.ray.intersects_location(ray_origins=[ray_origin], ray_directions=[ray_direction])
+
+        print()
+        print(intersections)
+        print(face_indices)
 
         distance_p1_p2 = get_distance_between_points(p1, p2)
 
+        # Discard intersections if distance from inspection point is greater than the distance inspection point - POI
         intersections_indices = []
         for i in range(0, len(intersections)):
             intersection_point = Point(x = intersections[i][0], y = intersections[i][1], z = intersections[i][2])
