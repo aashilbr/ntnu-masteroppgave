@@ -13,3 +13,7 @@ The score of a possible inspection point is calculated based on the following:
 - Number of faces between the point and the POI (meaning: can we see the POI?)
 - Distance between point and POI
 - Angle between point and defined inspection direction of the POI
+
+## PyMesh
+
+This module uses PyMesh. We compile PyMesh from source. Be aware that you need approximately 12GB of RAM to compile PyMesh.
