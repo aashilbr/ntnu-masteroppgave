@@ -26,6 +26,16 @@ class MissionPlanner:
         mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/huldra-smaller/meshes/huldra-smaller.obj'
         self.mesh = trimesh.load(mesh_file, force='mesh')
 
+        #self.scene = trimesh.load(mesh_file)
+        #print(self.scene)
+        #print(self.scene.metadata)
+        #self.splitted_scene = trimesh.scene.split_scene(self.mesh)
+        #print(self.splitted_scene)
+        #print(len(self.splitted_scene))
+        #print(self.splitted_scene[0])
+
+        print(self.mesh.graph)
+
     def find_inspection_poses(self):
         inspection_poses = [None] * len(self.points_of_interest)
         
@@ -45,7 +55,12 @@ class MissionPlanner:
 
         possible_inspection_points_scores = [0] * len(possible_inspection_points)
         for i in range(0, len(possible_inspection_points)):
-            print(i, '/', len(possible_inspection_points))
+
+            if i < 14 or i > 14:
+                possible_inspection_points_scores[i] = 10000
+                continue
+
+            print(i, '/', len(possible_inspection_points), ':')
 
             possible_inspection_point = possible_inspection_points[i]
             score = 0
@@ -59,17 +74,20 @@ class MissionPlanner:
             # Lower score is better
             score = (100)*obstacles_count + (1)*distance_to_poi # TODO: Find a better score function
             possible_inspection_points_scores[i] = score
+
+            print()
         
         print('Inspection scores for point with identifier', poi.identifier)
         print(possible_inspection_points_scores)
         print('Lowest score:', min(possible_inspection_points_scores))
+        print('Index of lowest score:', min(range(len(possible_inspection_points_scores)), key = possible_inspection_points_scores.__getitem__))
         print('Highest score:', max(possible_inspection_points_scores))
 
         # Publish markers of possible inspection points with color grading based on its score
         colors = values_to_colors(possible_inspection_points_scores)
         for i in range(0, len(possible_inspection_points)):
             publish_marker(possible_inspection_points[i], r=colors[i][0], g=colors[i][1], b=colors[i][2], scale=0.2)
-            print(possible_inspection_points_scores[i], ':', colors[i])
+            #print(possible_inspection_points_scores[i], ':', colors[i])
 
         possible_inspection_points_sorted = [x for _, x in sorted(zip(possible_inspection_points_scores, possible_inspection_points), key=lambda pair: pair[0])]
         inspection_point = possible_inspection_points_sorted[0]
@@ -89,13 +107,26 @@ class MissionPlanner:
         ray_origin_point = Point(ray_origin[0], ray_origin[1], ray_origin[2])
         ray_direction = np.array(normalize(gazebo_to_obj_coordinates_only_roll([p2.x - p1.x, p2.y - p1.y, p2.z - p1.z])))
 
+        print('Ray origin:', ray_origin)
+        print('Ray origin point:', ray_origin_point.x, ray_origin_point.y, ray_origin_point.z)
+        print('Ray direction:', ray_direction)
+
         intersections, _, face_indices = self.mesh.ray.intersects_location(ray_origins=[ray_origin], ray_directions=[ray_direction])
 
-        print()
-        print(intersections)
-        print(face_indices)
+        #print(intersections)
+        #print(face_indices)
 
         distance_p1_p2 = get_distance_between_points(p1, p2)
+
+        print('Distance p1-p2:', distance_p1_p2)
+
+        '''
+        for i in range(0, len(intersections)):
+            print(intersections[i])
+            p = obj_to_gazebo_coordinates(intersections[i])
+            point = Point(p[0], p[1], p[2])
+            publish_marker(point)
+        '''
 
         # Discard intersections if distance from inspection point is greater than the distance inspection point - POI
         intersections_indices = []
@@ -104,6 +135,24 @@ class MissionPlanner:
             distance_ray_origin_intersection = get_distance_between_points(ray_origin_point, intersection_point)
             if distance_ray_origin_intersection < distance_p1_p2:
                 intersections_indices.append(i)
+
+        print('Intersecting faces:')
+        for i in range(0, len(intersections_indices)):
+            intersection_index = intersections_indices[i]
+            face_index = face_indices[intersection_index]
+            print(face_index, ':', self.mesh.faces[face_index])
+            vertices = self.mesh.faces[face_index]
+            print('Vertex', vertices[0], ':', self.mesh.vertices[vertices[0]])
+            print('Vertex', vertices[1], ':', self.mesh.vertices[vertices[1]])
+            print('Vertex', vertices[2], ':', self.mesh.vertices[vertices[2]])
+
+            intersection = intersections[intersection_index]
+            p = obj_to_gazebo_coordinates(intersection)
+            point = Point(p[0], p[1], p[2])
+            publish_marker(point)
+
+        
+
         return len(intersections_indices)
     
     def is_poi_face_against_inspection_point(self, poi: POI, point):
@@ -129,9 +178,9 @@ if __name__ == '__main__':
             #POI('valve3', Point(0, -26, 10), Quaternion(0, 0, 0, 1)),
             #POI('valve3', Point(-2, -24, 5), Quaternion(0, 0, 0, 1))
 
-            POI('20-2000VF', Point(coords0[0], coords0[1], coords0[2]), Quaternion(0, 0, 0, 1)), # "x": 304500, "y": 117014, "z": 30016
+            #POI('20-2000VF', Point(coords0[0], coords0[1], coords0[2]), Quaternion(0, 0, 0, 1)), # "x": 304500, "y": 117014, "z": 30016
             #POI('20-2007VF', Point(coords1[0], coords1[1], coords1[2]), Quaternion(0, 0, 0, 1)), # "x": 304950, "y": 115739, "z": 31149
-            #POI('20-2003VF', Point(coords2[0], coords2[1], coords2[2]), Quaternion(0, 0, 0, 1)), # "x": 307900, "y": 114401, "z": 30099
+            POI('20-2003VF', Point(coords2[0], coords2[1], coords2[2]), Quaternion(0, 0, 0, 1)), # "x": 307900, "y": 114401, "z": 30099
             #POI('20-2006PL', Point(coords3[0], coords3[1], coords3[2]), Quaternion(0, 0, 0, 1))  # "x": 310292, "y": 112550, "z": 30238
         ]
 
