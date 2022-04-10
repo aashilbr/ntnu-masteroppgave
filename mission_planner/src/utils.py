@@ -1,3 +1,4 @@
+from cmath import pi
 import rospy
 import rostopic
 from visualization_msgs.msg import Marker, MarkerArray
@@ -275,20 +276,8 @@ def get_orientation_towards_point(initial_point: Point, target_point: Point):
 
     look_direction = sub(vector_target_point, vector_initial_point)
 
-    # Angle between world_front and look_direction (in xy plane). Rotated around world_up
     yaw_angle = atan2(look_direction[1], look_direction[0]) - atan2(world_front[1], world_front[0])
-
-    # Angle between yaw_direction and look_direction, rotated around side_axis
-    look_direction_xz = [
-        look_direction[0] * cos(yaw_angle) - look_direction[1] * sin(yaw_angle),
-        look_direction[0] * sin(yaw_angle) - look_direction[1] * cos(yaw_angle),
-        look_direction[2]
-    ]
-    yaw_direction_xz = [look_direction_xz[0], look_direction_xz[1], 0]
-
-    pitch_angle = atan2(look_direction_xz[2], look_direction_xz[0]) - atan2(yaw_direction_xz[2], yaw_direction_xz[0])
-    if pitch_angle > 0:
-        pitch_angle = -pitch_angle
+    pitch_angle = atan2(sqrt(look_direction[0] * look_direction[0] + look_direction[1] * look_direction[1]), look_direction[2]) - pi/2
 
     q = quaternion_from_euler(0, pitch_angle, yaw_angle)
     q = normalize(q)
