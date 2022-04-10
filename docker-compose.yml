@@ -55,6 +55,8 @@ services:
       - GAZEBO_MASTER_URI=http://gazebo:11345
     volumes:
       - ./resources/huldra-models:/home/catkin_ws/src/model_spawner/src/huldra-models:rw
+    env_file:
+      - config.env
   
   mission_planner:
     container_name: mission_planner
