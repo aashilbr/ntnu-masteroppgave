@@ -17,3 +17,7 @@ Run the software by running `sudo ./run.sh`.
 ## Master thesis report
 
 A link might appear here in June.
+
+## Documentation
+
+See Readme files in all the subdirectories.
