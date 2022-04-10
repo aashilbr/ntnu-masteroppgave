@@ -47,31 +47,30 @@ class MissionPlanner:
 
         possible_inspection_points_scores = [0] * len(possible_inspection_points)
         for i in range(0, len(possible_inspection_points)):
-            print(i, '/', len(possible_inspection_points))
+            print(i, '/', len(possible_inspection_points), ':')
 
             possible_inspection_point = possible_inspection_points[i]
             score = 0
 
             distance_to_poi = get_distance_between_points(possible_inspection_point, poi.point)
-            will_inspector_crash = self.will_inspector_crash_at_point(possible_inspection_point)
+            #will_inspector_crash = self.will_inspector_crash_at_point(possible_inspection_point)
             obstacles_count = self.get_obstacles_between(possible_inspection_point, poi.point)
-            is_poi_face_against_inspection_point = self.is_poi_face_against_inspection_point(poi, possible_inspection_point)
-            score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.point)
+            angle_towards_poi = self.get_angle_towards_poi(poi, possible_inspection_point)
+            #score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.point)
 
             # Lower score is better
-            score = (100)*obstacles_count + (1)*distance_to_poi # TODO: Find a better score function
+            score = (100)*obstacles_count + (100)*angle_towards_poi + (1)*distance_to_poi # TODO: Find a better score function
             possible_inspection_points_scores[i] = score
         
-        print('Inspection scores for point with identifier', poi.identifier)
-        print(possible_inspection_points_scores)
-        print('Lowest score:', min(possible_inspection_points_scores))
-        print('Highest score:', max(possible_inspection_points_scores))
+        #print('Inspection scores for point with identifier', poi.identifier)
+        #print(possible_inspection_points_scores)
+        #print('Lowest score:', min(possible_inspection_points_scores))
+        #print('Highest score:', max(possible_inspection_points_scores))
 
         # Publish markers of possible inspection points with color grading based on its score
         colors = values_to_colors(possible_inspection_points_scores)
         for i in range(0, len(possible_inspection_points)):
             publish_marker(possible_inspection_points[i], r=colors[i][0], g=colors[i][1], b=colors[i][2], scale=0.2)
-            print(possible_inspection_points_scores[i], ':', colors[i])
 
         possible_inspection_points_sorted = [x for _, x in sorted(zip(possible_inspection_points_scores, possible_inspection_points), key=lambda pair: pair[0])]
         inspection_point = possible_inspection_points_sorted[0]
@@ -82,9 +81,9 @@ class MissionPlanner:
 
         return inspection_pose
     
-    def will_inspector_crash_at_point(self, point):
-        # TODO: Check if robot crashes at the given point. E.g. are there anything placed on the walkway?
-        return False # Dummy return value
+    #def will_inspector_crash_at_point(self, point):
+    #    # TODO: Check if robot crashes at the given point. E.g. are there anything placed on the walkway?
+    #    return False # Dummy return value
     
     def get_obstacles_between(self, p1: Point, p2: Point):
         ray_origin = np.array(gazebo_to_obj_coordinates([p1.x, p1.y, p1.z]))
@@ -93,9 +92,9 @@ class MissionPlanner:
 
         intersections, _, face_indices = self.mesh.ray.intersects_location(ray_origins=[ray_origin], ray_directions=[ray_direction])
 
-        print()
-        print(intersections)
-        print(face_indices)
+        #print()
+        #print(intersections)
+        #print(face_indices)
 
         distance_p1_p2 = get_distance_between_points(p1, p2)
 
@@ -108,9 +107,11 @@ class MissionPlanner:
                 intersections_indices.append(i)
         return len(intersections_indices)
     
-    def is_poi_face_against_inspection_point(self, poi: POI, point):
-        # TODO: Check if we can inspect the valve, using the discovered valve inspection direction (poi.direction). Need to implement poi.direction first
-        return True # Dummy return value
+    def get_angle_towards_poi(self, poi: POI, point):
+        orientation_poi_point = get_orientation_towards_point(poi.point, point)
+        angle = get_angle_between_quaternions(poi.orientation, orientation_poi_point)
+
+        return angle
 
     def get_score_from_image_analysis(self, inspection_point, poi_point):
         # Use camera plugin to take an image of POI from inspection position, apply image analysis and get a score.
@@ -125,13 +126,16 @@ if __name__ == '__main__':
         coords2 = obj_to_gazebo_coordinates([-114.401, 30.099, 307.900])
         coords3 = obj_to_gazebo_coordinates([-112.550, 30.238, 310.292])
 
+        q0 = quaternion_from_euler(0, 0, -pi/2)
+        orientation0 = Quaternion(q0[0], q0[1], q0[2], q0[3])
+
         points_of_interest = [
             #POI('valve1', Point(0, -20, 2), Quaternion(0, 0, 0, 1)),
             #POI('valve2', Point(5, -23, 5), Quaternion(0, 0, 0, 1)),
             #POI('valve3', Point(0, -26, 10), Quaternion(0, 0, 0, 1)),
             #POI('valve3', Point(-2, -24, 5), Quaternion(0, 0, 0, 1))
 
-            POI('20-2000VF', Point(coords0[0], coords0[1], coords0[2]), Quaternion(0, 0, 0, 1)), # "x": 304500, "y": 117014, "z": 30016
+            POI('20-2000VF', Point(coords0[0], coords0[1], coords0[2]), orientation0), # "x": 304500, "y": 117014, "z": 30016
             #POI('20-2007VF', Point(coords1[0], coords1[1], coords1[2]), Quaternion(0, 0, 0, 1)), # "x": 304950, "y": 115739, "z": 31149
             #POI('20-2003VF', Point(coords2[0], coords2[1], coords2[2]), Quaternion(0, 0, 0, 1)), # "x": 307900, "y": 114401, "z": 30099
             #POI('20-2006PL', Point(coords3[0], coords3[1], coords3[2]), Quaternion(0, 0, 0, 1))  # "x": 310292, "y": 112550, "z": 30238

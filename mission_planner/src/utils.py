@@ -4,9 +4,9 @@ import rostopic
 from visualization_msgs.msg import Marker, MarkerArray
 from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
-from tf.transformations import quaternion_from_euler
+from tf.transformations import quaternion_from_euler, quaternion_conjugate, quaternion_multiply
 from time import sleep
-from math import sqrt, cos, atan2, sin
+from math import sqrt, cos, atan2, sin, asin
 from typing import List
 import os
 
@@ -321,6 +321,14 @@ def normalize(v):
 
 def sub(u, v):
     return [ u[i]-v[i] for i in range(len(u)) ]
+
+def get_angle_between_quaternions(q1: Quaternion, q2: Quaternion):
+    _q1 = [q1.x, q1.y, q1.z, q1.w]
+    _q2 = [q2.x, q2.y, q2.z, q2.w]
+    q = quaternion_multiply(_q1, quaternion_conjugate(_q2))
+    vector = [q[0], q[1], q[2]]
+    theta = 2*asin(magnitude(vector))
+    return theta
 
 def values_to_colors(scores, lower_is_greener = True):
     min_score = min(scores)
