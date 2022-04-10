@@ -32,6 +32,10 @@ if 'HULDRA_OFFSET_PITCH' in os.environ:
 if 'HULDRA_OFFSET_ROLL' in os.environ:
     huldra_offset_roll = float(os.environ['HULDRA_OFFSET_ROLL'])
 
+def orientation_from_euler(roll, pitch, yaw):
+        q = quaternion_from_euler(roll, pitch, yaw)
+        return Quaternion(q[0], q[1], q[2], q[3])
+
 def pose_from_position_and_orientation(
     x, 
     y, 
@@ -59,6 +63,10 @@ def obj_to_gazebo_coordinates(coordinates):
     y = y + huldra_offset_y
     z = z + huldra_offset_z
     return [x, y, z]
+
+def obj_to_gazebo_point(obj_coordinates):
+    gazebo_coordinates = obj_to_gazebo_coordinates(obj_coordinates)
+    return Point(x = gazebo_coordinates[0], y = gazebo_coordinates[1], z = gazebo_coordinates[2])
 
 def obj_to_gazebo_coordinates_only_roll(coordinates):
     a = coordinates[0]
