@@ -68,6 +68,8 @@ services:
       - GAZEBO_MASTER_URI=http://gazebo:11345
     volumes:
       - ./resources/huldra-models:/home/catkin_ws/src/mission_planner/src/huldra-models:rw
+    env_file:
+      - config.env
   
   inspector:
     container_name: inspector

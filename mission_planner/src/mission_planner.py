@@ -9,21 +9,23 @@ import trimesh
 import numpy as np
 
 class MissionPlanner:
-    def __init__(self, points_of_interest = []):
+    def __init__(self, model_name, points_of_interest = []):
+        self.model_name = model_name
         self.points_of_interest = points_of_interest
 
         self.wp = Walkway(
             models_path = '/home/catkin_ws/src/mission_planner/src/huldra-models/',
-            walkway_path = 'huldra-smaller-walkway/meshes/',
-            walkway_filename = 'huldra-smaller-walkway.obj'
+            walkway_path = model_name + '-walkway/meshes/',
+            walkway_filename = model_name + '-walkway.obj'
         )
 
         self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
+
         self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
 
-        mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/huldra-smaller/meshes/huldra-smaller.obj'
+        mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/' + model_name + '/meshes/' + model_name + '.obj'
         self.mesh = trimesh.load(mesh_file, force='mesh')
 
     def find_inspection_poses(self):
@@ -135,7 +137,11 @@ if __name__ == '__main__':
             #POI('20-2006PL', Point(coords3[0], coords3[1], coords3[2]), Quaternion(0, 0, 0, 1))  # "x": 310292, "y": 112550, "z": 30238
         ]
 
-        mission_planner = MissionPlanner(points_of_interest)
+        huldra_model = None
+        if 'HULDRA_MODEL' in os.environ:
+            huldra_model = os.environ['HULDRA_MODEL']
+
+        mission_planner = MissionPlanner(huldra_model, points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()
 
         i = 0

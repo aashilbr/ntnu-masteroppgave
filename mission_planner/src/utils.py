@@ -8,6 +8,29 @@ from tf.transformations import quaternion_from_euler
 from time import sleep
 from math import sqrt, cos, atan2, sin
 from typing import List
+import os
+
+# Default offsets for Huldra models
+huldra_offset_x = 116
+huldra_offset_y = 287
+huldra_offset_z = -27
+huldra_offset_yaw = 0
+huldra_offset_pitch = 0
+huldra_offset_roll = pi/2
+
+# Offsets for Huldra models, from Docker environment variables
+if 'HULDRA_OFFSET_X' in os.environ:
+    huldra_offset_x = float(os.environ['HULDRA_OFFSET_X'])
+if 'HULDRA_OFFSET_Y' in os.environ:
+    huldra_offset_y = float(os.environ['HULDRA_OFFSET_Y'])
+if 'HULDRA_OFFSET_Z' in os.environ:
+    huldra_offset_z = float(os.environ['HULDRA_OFFSET_Z'])
+if 'HULDRA_OFFSET_YAW' in os.environ:
+    huldra_offset_yaw = float(os.environ['HULDRA_OFFSET_YAW'])
+if 'HULDRA_OFFSET_PITCH' in os.environ:
+    huldra_offset_pitch = float(os.environ['HULDRA_OFFSET_PITCH'])
+if 'HULDRA_OFFSET_ROLL' in os.environ:
+    huldra_offset_roll = float(os.environ['HULDRA_OFFSET_ROLL'])
 
 def pose_from_position_and_orientation(
     x, 
@@ -27,13 +50,14 @@ def obj_to_gazebo_coordinates(coordinates):
     b = coordinates[1]
     c = coordinates[2]
 
+    # TODO: Use huldra_offset_yaw, _pitch, _roll for this:
     x = a
     y = -c
     z = b
 
-    x = x + 116
-    y = y + 287
-    z = z - 27
+    x = x + huldra_offset_x
+    y = y + huldra_offset_y
+    z = z + huldra_offset_z
     return [x, y, z]
 
 def obj_to_gazebo_coordinates_only_roll(coordinates):
@@ -41,6 +65,7 @@ def obj_to_gazebo_coordinates_only_roll(coordinates):
     b = coordinates[1]
     c = coordinates[2]
 
+    # TODO: Use huldra_offset_yaw, _pitch, _roll for this:
     x = a
     y = -c
     z = b
@@ -51,10 +76,11 @@ def gazebo_to_obj_coordinates(coordinates):
     y = coordinates[1]
     z = coordinates[2]
 
-    x = x - 116
-    y = y - 287
-    z = z + 27
+    x = x - huldra_offset_x
+    y = y - huldra_offset_y
+    z = z - huldra_offset_z
 
+    # TODO: Use huldra_offset_yaw, _pitch, _roll for this:
     a = x
     c = -y
     b = z
@@ -66,6 +92,7 @@ def gazebo_to_obj_coordinates_only_roll(coordinates):
     y = coordinates[1]
     z = coordinates[2]
 
+    # TODO: Use huldra_offset_yaw, _pitch, _roll for this:
     a = x
     c = -y
     b = z
