@@ -60,6 +60,9 @@ class MissionPlanner:
 
             # Lower score is better
             score = (100)*obstacles_count + (100)*angle_towards_poi + (1)*distance_to_poi # TODO: Find a better score function
+            #score = distance_to_poi
+            #score = angle_towards_poi
+            #score = obstacles_count
             possible_inspection_points_scores[i] = score
         
         #print('Inspection scores for point with identifier', poi.identifier)
@@ -123,7 +126,7 @@ if __name__ == '__main__':
     try:
         points_of_interest = [
             POI('20-2000VF', obj_to_gazebo_point([-117.014, 30.016, 304.500]), orientation_from_euler(0, 0, -pi/2)), # "x": 304500, "y": 117014, "z": 30016
-            #POI('20-2007VF', obj_to_gazebo_point([-115.739, 31.149, 304.950]), orientation_from_euler(0, 0, 0)), # "x": 304950, "y": 115739, "z": 31149
+            #POI('20-2007VF', obj_to_gazebo_point([-115.739, 31.149, 304.950]), orientation_from_euler(0, 0, -pi)), # "x": 304950, "y": 115739, "z": 31149
             #POI('20-2003VF', obj_to_gazebo_point([-114.401, 30.099, 307.900]), orientation_from_euler(0, 0, 0)), # "x": 307900, "y": 114401, "z": 30099
             #POI('20-2006PL', obj_to_gazebo_point([-112.550, 30.238, 310.292]), orientation_from_euler(0, 0, 0))  # "x": 310292, "y": 112550, "z": 30238
         ]
