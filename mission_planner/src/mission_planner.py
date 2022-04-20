@@ -25,8 +25,8 @@ class MissionPlanner:
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
 
-        mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/' + model_name + '/meshes/' + model_name + '.obj'
-        self.mesh = trimesh.load(mesh_file, force='mesh')
+        self.mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/' + model_name + '/meshes/' + model_name + '.obj'
+        self.mesh = trimesh.load(self.mesh_file, force='mesh')
 
     def find_inspection_poses(self):
         inspection_poses = [None] * len(self.points_of_interest)
@@ -54,7 +54,7 @@ class MissionPlanner:
 
             distance_to_poi = get_distance_between_points(possible_inspection_point, poi.point)
             #will_inspector_crash = self.will_inspector_crash_at_point(possible_inspection_point)
-            obstacles_count = self.get_obstacles_between(possible_inspection_point, poi.point)
+            obstacles_count = self.get_obstacles_between(possible_inspection_point, poi, self.mesh_file)
             angle_towards_poi = self.get_angle_towards_poi(poi, possible_inspection_point)
             #score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.point)
 
@@ -88,7 +88,8 @@ class MissionPlanner:
     #    # TODO: Check if robot crashes at the given point. E.g. are there anything placed on the walkway?
     #    return False # Dummy return value
     
-    def get_obstacles_between(self, p1: Point, p2: Point):
+    def get_obstacles_between(self, p1: Point, poi: POI, obj_file):
+        p2 = poi.point
         ray_origin = np.array(gazebo_to_obj_coordinates([p1.x, p1.y, p1.z]))
         ray_origin_point = Point(ray_origin[0], ray_origin[1], ray_origin[2])
         ray_direction = np.array(normalize(gazebo_to_obj_coordinates_only_roll([p2.x - p1.x, p2.y - p1.y, p2.z - p1.z])))
@@ -101,13 +102,22 @@ class MissionPlanner:
 
         distance_p1_p2 = get_distance_between_points(p1, p2)
 
+        # TODO: Move this our of this function. Only needs to be done once per POI.
+        low_face_index, high_face_index = find_face_indices_covering_model(obj_file, poi.identifier)
+
         # Discard intersections if distance from inspection point is greater than the distance inspection point - POI
+        # Discard intersections if the intersection face is a part of the POI model
         intersections_indices = []
         for i in range(0, len(intersections)):
             intersection_point = Point(x = intersections[i][0], y = intersections[i][1], z = intersections[i][2])
             distance_ray_origin_intersection = get_distance_between_points(ray_origin_point, intersection_point)
-            if distance_ray_origin_intersection < distance_p1_p2:
-                intersections_indices.append(i)
+            
+            if distance_ray_origin_intersection >= distance_p1_p2:
+                continue
+            if face_indices[i] > low_face_index and face_indices[i] < high_face_index:
+                continue
+            
+            intersections_indices.append(i)
         return len(intersections_indices)
     
     def get_angle_towards_poi(self, poi: POI, point):

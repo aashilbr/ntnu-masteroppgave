@@ -378,3 +378,28 @@ def extract_object_from_obj(file, object_name):
             i += 1
         
         return new_object_string
+
+def find_face_indices_covering_model(file, tag):
+    with open(file) as f:
+        face_index = -1
+        object_index = -1
+        tag_object_index = None # Object index of the tag we're interested in
+        high_face_index = None
+        for line in f:
+            if line[:2] == 'f ':
+                face_index += 1
+
+            if line[:2] == 'o ':
+                object_index += 1
+
+            if line[:2] == 'o ' and ( line[2:2+len(tag)] == tag or line[3:3+len(tag)] == tag ):
+                low_face_index = face_index + 1
+                tag_object_index = object_index
+            elif line[:2] == 'o ' and (tag_object_index is not None) and (high_face_index is None):
+                high_face_index = face_index
+            
+        # Trimesh counts face index from the bottom of the file, therefore "invert" the high and low face index
+        low = face_index - high_face_index
+        high = face_index - low_face_index
+
+    return low, high
