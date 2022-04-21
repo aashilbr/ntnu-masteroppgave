@@ -1,5 +1,4 @@
 from geometry_msgs.msg import Quaternion, Pose, Point
-from tf.transformations import quaternion_from_euler
 
 class POI():
     def __init__(self, identifier, pose: Pose):
