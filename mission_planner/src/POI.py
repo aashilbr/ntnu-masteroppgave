@@ -13,5 +13,3 @@ class POI():
         self.point = point
         self.orientation = orientation
         self.pose = Pose(point, orientation)
-
-        # TODO: Find which gazebo direction corresponds to valve "inspection direction" and store that in self.direction
