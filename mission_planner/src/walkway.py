@@ -9,14 +9,12 @@ class Walkway():
         walkway_filename = 'huldra-smaller-walkway.obj',
         ):
 
-        self.models_path      = models_path
-        self.walkway_path     = walkway_path
-        self.walkway_filename = walkway_filename
+        walkway_file = models_path + walkway_path + walkway_filename
 
-        self.walkway_line = self._find_walkway_line()
+        self.walkway_line = self._find_walkway_line(walkway_file)
 
-    def _find_walkway_line(self):
-        walkway_mesh = pymesh.load_mesh(self.models_path + self.walkway_path + self.walkway_filename)
+    def _find_walkway_line(self, walkway_file):
+        walkway_mesh = pymesh.load_mesh(walkway_file)
 
         walkway_mesh.add_attribute('face_normal')
         face_normals = walkway_mesh.get_face_attribute('face_normal')
@@ -44,10 +42,11 @@ class Walkway():
         # TODO: Find end points on walkway and add them to the returned list
 
         # TODO: Return the list sorted, from one end of the walkway to the other end
+        #       or return the list so that the line is as short as possible (this might solve the sorting problem)
 
         points = [None] * len(face_centroids_upwards)
-        for point in face_centroids_upwards:
-            points[i] = Point(face_centroids_upwards[0], face_centroids_upwards[1], face_centroids_upwards[2])
+        for i, centroid in enumerate(face_centroids_upwards):
+            points[i] = Point(centroid[0], centroid[1], centroid[2])
         
         return points
     
@@ -55,6 +54,9 @@ class Walkway():
         return self.walkway_line
     
     def get_points_along_walkway_with_resolution(self, resolution):
+        # Note: "resolution" means distance between the returned points.
+        #       This means that (counter intuitively, I know) that e.g. resolution=10 actually means a lower resolution than resolution=1.
+        
         resolution_points = []
         resolution_points.append(self.walkway_line[0])
 

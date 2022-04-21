@@ -19,6 +19,7 @@ class MissionPlanner:
             walkway_filename = model_name + '-walkway.obj'
         )
 
+        # TODO: Instead of this "oog så har vi juksa litt" method, we should be able to find the walkway line programatically
         self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
 
         self.walkway_line = self.wp.get_walkway_line()
