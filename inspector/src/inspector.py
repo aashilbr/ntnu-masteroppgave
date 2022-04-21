@@ -2,16 +2,16 @@
 
 import rospy
 from gazebo_msgs.srv import SpawnModel
-from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from gazebo_msgs.msg import ModelState, ModelStates
+from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler
 from time import sleep
 
-def add_model():
+def add_robot_model():
     rospy.loginfo("Waiting for service gazebo/spawn_sdf_model ...")
     rospy.wait_for_service("gazebo/spawn_sdf_model")
 
-    rospy.loginfo('Adding Inspector Robot model (this can take some time - camera model will be downloaded)...')
+    rospy.loginfo('Adding Inspector Robot model (this can take some time - camera plugin will be downloaded)...')
     spawn_sdf_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
     with open('/home/catkin_ws/src/inspector/src/inspector_robot/inspector_robot.sdf') as file:
         inspector_robot_xml = file.read()
@@ -104,7 +104,7 @@ class Inspector():
 if __name__ == '__main__':
     rospy.init_node('inspector', anonymous=True)
     try:
-        add_model()
+        add_robot_model()
         inspector = Inspector()
         while not inspector.has_poses() or not inspector.has_robot_state():
             sleep(1)
