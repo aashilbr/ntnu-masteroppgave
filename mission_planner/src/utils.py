@@ -6,7 +6,7 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler, quaternion_conjugate, quaternion_multiply
 from time import sleep
-from math import sqrt, cos, atan2, sin, asin
+from math import sqrt, atan2, asin
 from typing import List
 import os
 
