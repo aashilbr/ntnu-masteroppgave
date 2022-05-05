@@ -1,2 +1,3 @@
 resources/huldra-models/huldra-small-area/meshes/Huldra-small-area.obj filter=lfs diff=lfs merge=lfs -text
 resources/huldra-models/huldra-small-area/meshes/huldra-small-area.obj filter=lfs diff=lfs merge=lfs -text
+resources/huldra-models/huldra-big/meshes/HULDRA-HO-PIPE.obj filter=lfs diff=lfs merge=lfs -text
