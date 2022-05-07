@@ -76,7 +76,7 @@ class ModelSpawner():
     
     def add_huldra_model(self, model_name):
         # Add Huldra model with the specified name
-        rospy.loginfo('Adding Huldra model:' + model_name + '...')
+        rospy.loginfo('Adding Huldra model: ' + model_name + '...')
 
         with open('/home/catkin_ws/src/model_spawner/src/huldra-models/' + model_name + '/model.sdf') as file:
             model_xml = file.read()
