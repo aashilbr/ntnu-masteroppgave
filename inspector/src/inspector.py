@@ -3,9 +3,12 @@
 import rospy
 from gazebo_msgs.srv import SpawnModel
 from gazebo_msgs.msg import ModelState, ModelStates
+from sensor_msgs.msg import Image
 from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler
 from time import sleep
+import cv2 as cv
+from cv_bridge import CvBridge
 
 def add_robot_model():
     rospy.loginfo("Waiting for service gazebo/spawn_sdf_model ...")
@@ -29,11 +32,13 @@ class Inspector():
         self._poi_poses = None
         self._inspection_poses = None
         self._robot_state = None
+        self._image_message = None
 
         rospy.loginfo('Listening for POI poses and inspection poses...')
         rospy.Subscriber("inspector/poi_poses", PoseArray, self._store_poi_poses)
         rospy.Subscriber("inspector/inspection_poses", PoseArray, self._store_inspection_poses)
         rospy.Subscriber("gazebo/model_states", ModelStates, self._store_robot_state)
+        rospy.Subscriber("inspector_robot/camera/image_raw", Image, self._store_image_message)
     
     def _store_poi_poses(self, poses_array: PoseArray):
         self._poi_poses = poses_array.poses
@@ -63,6 +68,13 @@ class Inspector():
         if self._robot_state == None:
             print('Storing Inspector Robot state.')
             self._robot_state = new_robot_state
+
+    def _store_image_message(self, image_message):
+        self._image_message = image_message
+    
+    def _save_image(self):
+        img = CvBridge().imgmsg_to_cv2(self._image_message, desired_encoding='passthrough')
+        cv.imwrite('/home/catkin_ws/src/inspector/output/test.jpg', img)
 
     def has_poses(self):
         if self._poi_poses != None and self._inspection_poses != None:
@@ -100,6 +112,7 @@ class Inspector():
             i += 1
 
         # TODO: Save inspection image
+        self._save_image()
 
 if __name__ == '__main__':
     rospy.init_node('inspector', anonymous=True)
