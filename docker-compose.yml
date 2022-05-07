@@ -80,3 +80,5 @@ services:
     environment:
       - ROS_MASTER_URI=http://ros_noetic:11311
       - GAZEBO_MASTER_URI=http://gazebo:11345
+    volumes:
+      - ./inspector/output:/home/catkin_ws/src/inspector/output:rw
