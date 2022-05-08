@@ -6,7 +6,7 @@ from gazebo_msgs.msg import ModelState, ModelStates
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler
-from time import sleep
+from time import sleep, time
 import cv2 as cv
 from cv_bridge import CvBridge
 
@@ -72,9 +72,9 @@ class Inspector():
     def _store_image_message(self, image_message):
         self._image_message = image_message
     
-    def _save_image(self):
+    def _save_image(self, filename_suffix):
         img = CvBridge().imgmsg_to_cv2(self._image_message, desired_encoding='passthrough')
-        cv.imwrite('/home/catkin_ws/src/inspector/output/test.jpg', img)
+        cv.imwrite('/home/catkin_ws/src/inspector/output/inspection' + str(filename_suffix) + '.jpg', img)
 
     def has_poses(self):
         if self._poi_poses != None and self._inspection_poses != None:
@@ -111,8 +111,9 @@ class Inspector():
             sleep(1)
             i += 1
 
-        # TODO: Save inspection image
-        self._save_image()
+        # Save inspection image
+        suffix = '-' + str(time()) + '-' + str(index)
+        self._save_image(suffix)
 
 if __name__ == '__main__':
     rospy.init_node('inspector', anonymous=True)
