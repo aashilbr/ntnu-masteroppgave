@@ -6,7 +6,7 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Pose, Point, PoseArray
 from tf.transformations import quaternion_from_euler, quaternion_conjugate, quaternion_multiply
 from time import sleep
-from math import sqrt, atan2, asin
+from math import sqrt, atan2, asin, cos, sin
 from typing import List
 import os
 
@@ -403,3 +403,30 @@ def find_face_indices_covering_model(file, tag):
         high = face_index - low_face_index
 
     return low, high
+
+def cross(a, b):
+    c = [a[1]*b[2] - a[2]*b[1],
+         a[2]*b[0] - a[0]*b[2],
+         a[0]*b[1] - a[1]*b[0]]
+
+    return c
+
+def get_points_on_circle(s, r, n, count):
+    #https://stackoverflow.com/questions/27714014/3d-point-on-circumference-of-a-circle-with-a-center-radius-and-normal-vector
+    v3 = normalize(n)
+    v1 = normalize([v3[2], 0, -v3[0]])
+    v2 = cross(v3, v1)
+
+    points = []
+    for i in range(0, count):
+        a = (2*pi/count) * i
+
+        px = s.x + r * ( cos(a) * v1[0] + sin(a) * v2[0] )
+        py = s.y + r * ( cos(a) * v1[1] + sin(a) * v2[1] )
+        pz = s.z + r * ( cos(a) * v1[2] + sin(a) * v2[2] )
+
+        p = Point(x = px, y = py, z = pz)
+
+        points.append(p)
+    
+    return points

@@ -56,6 +56,7 @@ class MissionPlanner:
             distance_to_poi = get_distance_between_points(possible_inspection_point, poi.point)
             #will_inspector_crash = self.will_inspector_crash_at_point(possible_inspection_point)
             obstacles_count = self.get_obstacles_between(possible_inspection_point, poi, self.mesh_file)
+            obstacles_around_count = self.get_obstacles_around(possible_inspection_point, poi, self.mesh_file)
             angle_towards_poi = self.get_angle_towards_poi(poi, possible_inspection_point)
             #score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.point)
 
@@ -120,6 +121,29 @@ class MissionPlanner:
             
             intersections_indices.append(i)
         return len(intersections_indices)
+
+    def get_obstacles_around(self, p1: Point, poi: POI, obj_file):
+        # Find a circle around poi, facing p1. Find n points evenly distributed on the circle.
+        s = poi.point
+        r = 0.1
+        poi_p1_direction = [p1.x - poi.point.x, p1.y - poi.point.y, p1.z - poi.point.z]
+        count = 4
+        circle_points = get_points_on_circle(s, r, poi_p1_direction, count)
+
+        #publish_marker(s, r=1, g=0, b=0)
+        #for point in circle_points:
+        #    print(point)
+        #    publish_marker(point)
+        
+
+        # Then, count obstacles between p1 and poi along N vectors from poi to the circle.
+        obstacles_count = 0
+        for point in circle_points:
+            obstacles_count += self.get_obstacles_between(p1, poi, obj_file)
+        
+        print('Obstacle count around poi with', count, 'rays on a circle:', obstacles_count)
+
+        return 0 # Dummy return value
     
     def get_angle_towards_poi(self, poi: POI, point):
         orientation_poi_point = get_orientation_towards_point(poi.point, point)
@@ -137,9 +161,9 @@ if __name__ == '__main__':
     try:
         points_of_interest = [
             POI('20-2000VF', obj_to_gazebo_point([-117.014, 30.016, 304.500]), orientation_from_euler(0, 0, -pi/2)), # "x": 304500, "y": 117014, "z": 30016
-            #POI('20-2007VF', obj_to_gazebo_point([-115.739, 31.149, 304.950]), orientation_from_euler(0, 0, -pi)), # "x": 304950, "y": 115739, "z": 31149
-            #POI('20-2003VF', obj_to_gazebo_point([-114.401, 30.099, 307.900]), orientation_from_euler(0, 0, 0)), # "x": 307900, "y": 114401, "z": 30099
-            #POI('20-2006PL', obj_to_gazebo_point([-112.550, 30.238, 310.292]), orientation_from_euler(0, 0, 0))  # "x": 310292, "y": 112550, "z": 30238
+            POI('20-2007VF', obj_to_gazebo_point([-115.739, 31.149, 304.950]), orientation_from_euler(0, 0, -pi)), # "x": 304950, "y": 115739, "z": 31149
+            POI('20-2003VF', obj_to_gazebo_point([-114.401, 30.099, 307.900]), orientation_from_euler(0, 0, 0)), # "x": 307900, "y": 114401, "z": 30099
+            POI('20-2006PL', obj_to_gazebo_point([-112.550, 30.238, 310.292]), orientation_from_euler(0, 0, 0))  # "x": 310292, "y": 112550, "z": 30238
         ]
 
         huldra_model = None
