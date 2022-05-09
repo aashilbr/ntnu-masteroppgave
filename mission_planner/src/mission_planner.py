@@ -20,11 +20,21 @@ class MissionPlanner:
         )
 
         # TODO: Instead of this "oog så har vi juksa litt" method, we should be able to find the walkway line programatically
-        self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
+        if model_name == 'huldra-smaller':
+            self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
+        elif model_name == 'huldra-small-area':
+            self.wp.walkway_line = constants.huldra_small_area_walkway_line # Use sorted walkway line constant
 
         self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
-        publish_line_marker(self.walkway_line)
+        publish_line_marker(self.walkway_line, scale = 0.02)
+
+        print('Walkway line:')
+        for i in range(0, len(self.walkway_line)):
+            x = str(self.walkway_line[i].x)
+            y = str(self.walkway_line[i].y)
+            z = str(self.walkway_line[i].z)
+            print('Point(' + x + ', ' + y + ', ' + z + '),')
 
         print('Loading mesh file...')
         self.mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/' + model_name + '/meshes/' + model_name + '.obj'
