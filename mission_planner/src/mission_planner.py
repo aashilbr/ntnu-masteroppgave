@@ -26,8 +26,10 @@ class MissionPlanner:
         publish_markers(self.walkway_line)
         publish_line_marker(self.walkway_line)
 
+        print('Loading mesh file...')
         self.mesh_file = '/home/catkin_ws/src/mission_planner/src/huldra-models/' + model_name + '/meshes/' + model_name + '.obj'
         self.mesh = trimesh.load(self.mesh_file, force='mesh')
+        print('Mesh file loaded.')
 
     def find_inspection_poses(self):
         inspection_poses = [None] * len(self.points_of_interest)
@@ -160,16 +162,13 @@ if __name__ == '__main__':
     rospy.init_node('mission_planner', anonymous=True)
     trimesh.util.attach_to_log()
     try:
-        points_of_interest = [
-            POI('20-2000VF', obj_to_gazebo_point([-117.014, 30.016, 304.500]), orientation_from_euler(0, 0, -pi/2)), # "x": 304500, "y": 117014, "z": 30016
-            #POI('20-2007VF', obj_to_gazebo_point([-115.739, 31.149, 304.950]), orientation_from_euler(0, 0, -pi)), # "x": 304950, "y": 115739, "z": 31149
-            #POI('20-2003VF', obj_to_gazebo_point([-114.401, 30.099, 307.900]), orientation_from_euler(0, -pi/4, -pi)), # "x": 307900, "y": 114401, "z": 30099
-            #POI('20-2006PL', obj_to_gazebo_point([-112.550, 30.238, 310.292]), orientation_from_euler(0, 0, -pi))  # "x": 310292, "y": 112550, "z": 30238
-        ]
-
         huldra_model = None
         if 'HULDRA_MODEL' in os.environ:
             huldra_model = os.environ['HULDRA_MODEL']
+        
+        points_of_interest = []
+        if huldra_model == 'huldra-smaller':
+            points_of_interest = constants.huldra_smaller_points_of_interest
 
         mission_planner = MissionPlanner(huldra_model, points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()
