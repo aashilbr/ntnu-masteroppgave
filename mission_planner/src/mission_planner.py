@@ -24,6 +24,8 @@ class MissionPlanner:
             self.wp.walkway_line = constants.huldra_smaller_walkway_line # Use sorted walkway line constant
         elif model_name == 'huldra-small-area':
             self.wp.walkway_line = constants.huldra_small_area_walkway_line # Use sorted walkway line constant
+        elif model_name == 'huldra-big':
+            self.wp.walkway_line = constants.huldra_big_walkway_line # Use sorted walkway line constant
 
         self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
