@@ -21,7 +21,7 @@ class MissionPlanner:
 
         # TODO: Instead of this "oog så har vi juksa litt" method, we should be able to find the walkway line programatically
         if model_name == 'huldra-smaller':
-            self.wp.walkway_line = constants.smaller_area_walkway_line # Use sorted walkway line constant
+            self.wp.walkway_line = constants.huldra_smaller_walkway_line # Use sorted walkway line constant
         elif model_name == 'huldra-small-area':
             self.wp.walkway_line = constants.huldra_small_area_walkway_line # Use sorted walkway line constant
 

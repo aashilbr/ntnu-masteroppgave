@@ -2,7 +2,7 @@ from geometry_msgs.msg import Point
 from POI import POI
 from utils import *
 
-smaller_area_walkway_line = [
+huldra_smaller_walkway_line = [
     Point(3.433365333333356, -24.15834533333333, 2.4600009999999948),
     Point(0.866699666666662, -24.4916786666667, 2.4600009999999948),
     Point(-1.9056573333333375, -24.45834333333329, 2.4600009999999948),
