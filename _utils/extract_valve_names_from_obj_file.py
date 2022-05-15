@@ -1,8 +1,8 @@
-in_directory  = "/workspace/resources/huldra-models/huldra-small-area/meshes/"
-in_filename   = 'huldra-small-area.obj'
+in_directory  = "/workspace/resources/huldra-models/huldra-medium/meshes/"
+in_filename   = 'huldra-medium.obj'
 in_file       = in_directory + in_filename
 out_directory = "/workspace/_utils/"
-out_filename  = 'valve_names_from_huldra_small_area.txt'
+out_filename  = 'valve_names_from_huldra_medium.txt'
 out_file      = out_directory + out_filename
 
 name_list = []
