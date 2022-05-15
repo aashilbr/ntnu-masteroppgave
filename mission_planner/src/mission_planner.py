@@ -26,6 +26,8 @@ class MissionPlanner:
             self.wp.walkway_line = constants.huldra_small_area_walkway_line # Use sorted walkway line constant
         elif model_name == 'huldra-big':
             self.wp.walkway_line = constants.huldra_big_walkway_line # Use sorted walkway line constant
+        elif model_name == 'huldra-medium':
+            self.wp.walkway_line = constants.huldra_medium_walkway_line # Use sorted walkway line constant
 
         self.walkway_line = self.wp.get_walkway_line()
         publish_markers(self.walkway_line)
@@ -181,6 +183,8 @@ if __name__ == '__main__':
         points_of_interest = []
         if huldra_model == 'huldra-smaller':
             points_of_interest = constants.huldra_smaller_points_of_interest
+        if huldra_model == 'huldra-medium':
+            points_of_interest = constants.huldra_medium_points_of_interest
 
         mission_planner = MissionPlanner(huldra_model, points_of_interest)
         inspection_poses = mission_planner.find_inspection_poses()
