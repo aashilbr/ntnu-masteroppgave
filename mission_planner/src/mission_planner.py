@@ -49,7 +49,7 @@ class MissionPlanner:
         inspection_poses = [None] * len(self.points_of_interest)
         
         for i in range(0, len(self.points_of_interest)):
-            print('POI no.', i, '/', len(self.points_of_interest), ':')
+            print('POI no.', i+1, '/', len(self.points_of_interest), ':')
             inspection_poses[i] = self.find_inspection_pose(self.points_of_interest[i])
 
         return inspection_poses
