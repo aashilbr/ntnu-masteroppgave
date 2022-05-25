@@ -1,10 +1,10 @@
 # Must be run from within the workspace container (devcontainer)
 
 in_directory  = "/workspace/_utils/"
-in_filename   = 'tags_huldra_smaller_in.txt'
+in_filename   = 'tags_huldra_medium_in.txt'
 in_file       = in_directory + in_filename
 out_directory = "/workspace/_utils/"
-out_filename  = 'tags_huldra_smaller_out.txt'
+out_filename  = 'tags_huldra_medium_out.txt'
 out_file      = out_directory + out_filename
 
 tag_list = []
