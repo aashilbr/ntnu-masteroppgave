@@ -65,7 +65,7 @@ class MissionPlanner:
 
         possible_inspection_points_scores = [0] * len(possible_inspection_points)
         for i in range(0, len(possible_inspection_points)):
-            print(i, '/', len(possible_inspection_points), ':')
+            print(i+1, '/', len(possible_inspection_points), ':')
 
             possible_inspection_point = possible_inspection_points[i]
             score = 0
@@ -82,6 +82,8 @@ class MissionPlanner:
             #score = distance_to_poi
             #score = angle_towards_poi
             #score = obstacles_count
+            #score = obstacles_around_count
+            
             possible_inspection_points_scores[i] = score
         
         #print('Inspection scores for point with identifier', poi.identifier)
@@ -160,7 +162,7 @@ class MissionPlanner:
         
         print('Obstacle count around poi with', count, 'rays on a circle:', obstacles_count)
 
-        return 0 # Dummy return value
+        return obstacles_count
     
     def get_angle_towards_poi(self, poi: POI, point):
         orientation_poi_point = get_orientation_towards_point(poi.point, point)
