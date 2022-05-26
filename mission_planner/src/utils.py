@@ -297,8 +297,7 @@ def get_point_between_at_distance(p1: Point, p2: Point, distance):
     p3 = Point(0, 0, 0)
     p3.x = p1.x + (distance/distance_between_points) * (p2.x - p1.x)
     p3.y = p1.y + (distance/distance_between_points) * (p2.y - p1.y)
-    # TODO: Take z coordinates into account
-    p3.z = p1.z
+    p3.z = p1.z + (distance/distance_between_points) * (p2.z - p1.z)
     
     return p3
 
