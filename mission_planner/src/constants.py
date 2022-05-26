@@ -48,7 +48,7 @@ huldra_medium_walkway_line = [
     Point(-5.43918, -11.33459, 1.7100030000000004), #tilbake til 2
 
     Point(-9.447300999999996, -12.31233733333329, 1.9500010000000074),
-    Point(-16.93963099999999, -12.645670666666604, 1.9500010000000074),
+    Point(-16.93963099999999, -12.645670666666604, 1.9500010000000074)
 
 ]
 
@@ -440,13 +440,10 @@ huldra_smaller_points_of_interest = [
 
 huldra_medium_points_of_interest = [
     POI('27-4453PV', obj_to_gazebo_point([-128.059, 47.474, 297.49]), orientation_from_euler(0, 0, pi/2)),
-    POI('27-4510PV', obj_to_gazebo_point([-123.157, 47.268, 295.153]), orientation_from_euler(0, 0, pi))
-]
-'''
+    POI('27-4510PV', obj_to_gazebo_point([-123.157, 47.268, 295.153]), orientation_from_euler(0, 0, pi)),
     POI('27-4511PV', obj_to_gazebo_point([-124.146, 47.289, 294.064]), orientation_from_euler(0, 0, -pi/2)),
     POI('27-4512PV', obj_to_gazebo_point([-123.157, 47.627, 294.496]), orientation_from_euler(0, 0, pi)),
     POI('27-4541PV', obj_to_gazebo_point([-123.157, 47.533, 295.814]), orientation_from_euler(0, 0, -pi/2)),
-    
     POI('27-4542PV', obj_to_gazebo_point([-123.157, 47.605, 295.815]), orientation_from_euler(0, 0, pi)),
     POI('27-4501PV', obj_to_gazebo_point([-132.172, 47.435, 297.544]), orientation_from_euler(0, 0, pi/2)),
     POI('27-4502PV', obj_to_gazebo_point([-130.951, 47.447, 297.544]), orientation_from_euler(0, 0, pi/2)),
@@ -474,6 +471,5 @@ huldra_medium_points_of_interest = [
     POI('63-4481AI', obj_to_gazebo_point([-122.858, 48.435, 298.747]), orientation_from_euler(0, 0, pi)),
     POI('63-4482AI', obj_to_gazebo_point([-125.312, 48.435, 295.485]), orientation_from_euler(0, 0, 0)),
     POI('64-4462GI', obj_to_gazebo_point([-118.62, 47.396, 298.545]), orientation_from_euler(0, 0, -pi/2)),
-    POI('64-4463GI', obj_to_gazebo_point([-118.62, 47.554, 298.704]), orientation_from_euler(0, -pi/2, ))
+    POI('64-4463GI', obj_to_gazebo_point([-118.62, 47.554, 298.704]), orientation_from_euler(0, -pi/2, 0)),
 ]
-'''
