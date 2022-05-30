@@ -3,15 +3,29 @@ import rospy
 from utils import *
 from walkway import Walkway
 from POI import POI
-from time import sleep
+from time import sleep, time
+import datetime
 import constants
 import trimesh
 import numpy as np
+from math import inf
 
 class MissionPlanner:
     def __init__(self, model_name, points_of_interest = []):
         self.model_name = model_name
         self.points_of_interest = points_of_interest
+
+        self.scores_distance = [0] * len(points_of_interest)
+        self.scores_angle = [0] * len(points_of_interest)
+        self.scores_obstacles = [0] * len(points_of_interest)
+        self.scores_obstacles_around = [0] * len(points_of_interest)
+        self.scores_total = [0] * len(points_of_interest)
+
+        self.ray_time_total = 0
+
+        self.count_discarded_too_big_angle = 0
+        self.count_discarded_all_inf = 0
+        self.pois_discarded_inf = []
 
         self.wp = Walkway(
             models_path = '/home/catkin_ws/src/mission_planner/src/huldra-models/',
@@ -71,14 +85,23 @@ class MissionPlanner:
             score = 0
 
             distance_to_poi = get_distance_between_points(possible_inspection_point, poi.point)
+            angle_towards_poi = self.get_angle_towards_poi(poi, possible_inspection_point)
+
+            # Filtering before rays:
+            #if angle_towards_poi > pi/2:
+            #   possible_inspection_points_scores[i] = inf
+            #   self.count_discarded_too_big_angle += 1
+            #   continue
+
+
             #will_inspector_crash = self.will_inspector_crash_at_point(possible_inspection_point)
             obstacles_count = self.get_obstacles_between(possible_inspection_point, poi, self.mesh_file)
-            #obstacles_around_count = self.get_obstacles_around(possible_inspection_point, poi, self.mesh_file)
-            angle_towards_poi = self.get_angle_towards_poi(poi, possible_inspection_point)
+            obstacles_around_count = self.get_obstacles_around(possible_inspection_point, poi, self.mesh_file)
             #score_from_image_analysis = self.get_score_from_image_analysis(possible_inspection_point, poi.point)
 
             # Lower score is better
-            score = (100)*obstacles_count + (100)*angle_towards_poi + (1)*distance_to_poi # TODO: Find a better score function
+            #score = (100)*obstacles_count + (100)*angle_towards_poi + (1)*distance_to_poi # TODO: Find a better score function
+            score = ( (100)*(obstacles_count + obstacles_around_count) )/5 + (100)*angle_towards_poi + (1)*distance_to_poi # Ray-around
             #score = distance_to_poi
             #score = angle_towards_poi
             #score = obstacles_count
@@ -90,6 +113,11 @@ class MissionPlanner:
         #print(possible_inspection_points_scores)
         #print('Lowest score:', min(possible_inspection_points_scores))
         #print('Highest score:', max(possible_inspection_points_scores))
+
+        if min(possible_inspection_points_scores) == inf:
+            self.count_discarded_all_inf += 1
+            print('Lowest score: Inf')
+            self.pois_discarded_inf.append(poi.identifier)
 
         # Publish markers of possible inspection points with color grading based on its score
         colors = values_to_colors(possible_inspection_points_scores)
@@ -110,6 +138,8 @@ class MissionPlanner:
     #    return False # Dummy return value
     
     def get_obstacles_between(self, p1: Point, poi: POI, obj_file):
+        ray_time_start = time()
+
         p2 = poi.point
         ray_origin = np.array(gazebo_to_obj_coordinates([p1.x, p1.y, p1.z]))
         ray_origin_point = Point(ray_origin[0], ray_origin[1], ray_origin[2])
@@ -139,6 +169,10 @@ class MissionPlanner:
                 continue
             
             intersections_indices.append(i)
+        
+        ray_time_now = time()
+        self.ray_time_total += (ray_time_now - ray_time_start)
+
         return len(intersections_indices)
 
     def get_obstacles_around(self, p1: Point, poi: POI, obj_file):
@@ -189,7 +223,19 @@ if __name__ == '__main__':
             points_of_interest = constants.huldra_medium_points_of_interest
 
         mission_planner = MissionPlanner(huldra_model, points_of_interest)
+
+        time_before = time()
         inspection_poses = mission_planner.find_inspection_poses()
+        time_after = time()
+        time_difference = time_after - time_before
+        time_difference_formatted = str(datetime.timedelta(seconds=time_difference))
+        ray_time_total_formatted = str(datetime.timedelta(seconds=mission_planner.ray_time_total))
+        print('Time difference before-after finding inspection points:', time_difference, 'seconds')
+        print('Time difference (formatted):', time_difference_formatted)
+        print('Total ray time (including ray-around):', mission_planner.ray_time_total)
+        print('Total ray time (including ray-around) (formatted):', ray_time_total_formatted)
+        print('Number of points discarded due to too big angle:', mission_planner.count_discarded_too_big_angle)
+        print('Number of POIs where all insp.points got inf score:', mission_planner.count_discarded_all_inf)
 
         i = 0
         while i <= 3:
